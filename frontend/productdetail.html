@@ -3,9 +3,436 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>CampusMarket</title>
+
+    <style>
+        body {
+            margin: 0;
+            background-color: #f8f3ee;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #222222;
+        }
+
+        .page {
+            width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0 25px 0;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .menu {
+            display: flex;
+            gap: 30px;
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: #333333;
+            font-size: 16px;
+        }
+
+        .top-icons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .small-icon {
+            width: 16px;
+            height: 16px;
+            background-color: #111111;
+            border-radius: 3px;
+        }
+
+        .profile {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: #d8c8b8;
+        }
+
+        .back-text {
+            font-size: 14px;
+            color: #666666;
+            margin-bottom: 18px;
+        }
+
+        .main-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 35px;
+        }
+
+        .left-part {
+            width: 100%;
+        }
+
+        .big-image img {
+            width: 100%;
+            height: 430px;
+            object-fit: cover;
+            border-radius: 20px;
+            display: block;
+        }
+
+        .small-images {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-top: 18px;
+        }
+
+        .small-images img {
+            width: 100%;
+            height: 170px;
+            object-fit: cover;
+            border-radius: 18px;
+            display: block;
+        }
+
+        .right-part {
+            width: 100%;
+        }
+
+        .category-line {
+            font-size: 12px;
+            color: #777777;
+            margin-bottom: 12px;
+        }
+
+        .label {
+            display: inline-block;
+            background-color: #f2dd72;
+            color: #5b4d00;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 6px 10px;
+            border-radius: 20px;
+            margin-right: 10px;
+        }
+
+        .product-title {
+            font-size: 46px;
+            line-height: 1.1;
+            margin: 10px 0;
+            color: #13243a;
+        }
+
+        .price {
+            font-size: 34px;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        .seller-box {
+            background-color: #fff8f2;
+            border: 1px solid #eee0d6;
+            border-radius: 18px;
+            padding: 15px;
+            margin-bottom: 24px;
+        }
+
+        .seller-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .seller-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .seller-circle {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background-color: #dce9cd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: #4d6d4d;
+        }
+
+        .seller-name {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .seller-info {
+            font-size: 12px;
+            color: #777777;
+            margin-top: 3px;
+        }
+
+        .verified {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: #5e8c69;
+        }
+
+        .section-title {
+            font-size: 12px;
+            color: #888888;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            font-size: 14px;
+            color: #555555;
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        .pickup-box {
+            background-color: #ffffff;
+            border: 1px solid #eee0d6;
+            border-radius: 18px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .pickup-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .location-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background-color: #f4eab8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+        }
+
+        .pickup-main {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .pickup-sub {
+            font-size: 12px;
+            color: #777777;
+        }
+
+        .buy-btn {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 30px;
+            background-color: #091b2d;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 14px;
+            cursor: pointer;
+        }
+
+        .message-btn {
+            width: 100%;
+            padding: 17px;
+            border-radius: 30px;
+            border: 1px solid #e4d7cd;
+            background-color: transparent;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .similar-section {
+            margin-top: 55px;
+        }
+
+        .similar-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .similar-top h2 {
+            margin: 0;
+            font-size: 34px;
+            color: #1c2432;
+        }
+
+        .similar-top a {
+            text-decoration: none;
+            color: #666666;
+            font-size: 14px;
+        }
+
+        .similar-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 22px;
+        }
+
+        .item-card img {
+            width: 100%;
+            height: 270px;
+            object-fit: cover;
+            border-radius: 18px;
+            display: block;
+        }
+
+        .item-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .item-place {
+            font-size: 13px;
+            color: #888888;
+            margin-top: 5px;
+        }
+    </style>
 </head>
 <body>
-    
+
+    <div class="page">
+
+        <div class="topbar">
+            <div class="logo">CampusMarket</div>
+
+            <div class="menu">
+                <a href="#">Shop</a>
+                <a href="#">Sell</a>
+                <a href="#">Messages</a>
+            </div>
+
+            <div class="top-icons">
+                <div class="small-icon"></div>
+                <div class="small-icon"></div>
+                <div class="profile"></div>
+                <div class="profile" style="background-color: #cfcfcf;"></div>
+            </div>
+        </div>
+
+        <div class="back-text">← Back to Electronics</div>
+
+        <div class="main-section">
+
+            <div class="left-part">
+                <div class="big-image">
+                    <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=1200&q=80" alt="Laptop">
+                </div>
+
+                <div class="small-images">
+                    <img src="https://images.unsplash.com/photo-1517336714739-489689fd1ca8?auto=format&fit=crop&w=900&q=80" alt="Laptop Image">
+                    <img src="https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?auto=format&fit=crop&w=900&q=80" alt="Laptop Side View">
+                </div>
+            </div>
+
+            <div class="right-part">
+                <div class="category-line">
+                    <span class="label">BRAND NEW</span>
+                    Electronics • Computers
+                </div>
+
+                <h1 class="product-title">MacBook Pro 14" M2 Max</h1>
+
+                <div class="price">$1,850</div>
+
+                <div class="seller-box">
+                    <div class="seller-row">
+                        <div class="seller-left">
+                            <div class="seller-circle">CS</div>
+                            <div>
+                                <div class="seller-name">CS Senior 2024</div>
+                                <div class="seller-info">★ 4.9 rating • 12 sales</div>
+                            </div>
+                        </div>
+                        <div class="verified"></div>
+                    </div>
+                </div>
+
+                <div class="section-title">DESCRIPTION</div>
+                <div class="description">
+                    Pristine condition, barely used for one semester. Includes original box and all accessories.
+                    Perfect for heavy engineering or design work. The M2 Max chip provides strong performance
+                    for rendering and compiling.
+                </div>
+
+                <div class="section-title">PICKUP DETAILS</div>
+                <div class="pickup-box">
+                    <div class="pickup-row">
+                        <div class="location-icon">📍</div>
+                        <div>
+                            <div class="pickup-main">Nilgiri Hostel, Room 402</div>
+                            <div class="pickup-sub">Campus Residential Area • 5 min walk from Gate 2</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="buy-btn">Buy Now →</button>
+                <button class="message-btn">■ Message Seller</button>
+            </div>
+
+        </div>
+
+        <div class="similar-section">
+            <div class="similar-top">
+                <h2>Similar in Electronics</h2>
+                <a href="#">View all</a>
+            </div>
+
+            <div class="similar-list">
+
+                <div class="item-card">
+                    <img src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=900&q=80" alt="Tablet">
+                    <div class="item-info">
+                        <div>iPad Pro 12.9" M1</div>
+                        <div>$890</div>
+                    </div>
+                    <div class="item-place">2 miles away</div>
+                </div>
+
+                <div class="item-card">
+                    <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80" alt="Headphones">
+                    <div class="item-info">
+                        <div>Bose QuietComfort</div>
+                        <div>$210</div>
+                    </div>
+                    <div class="item-place">On-campus pickup</div>
+                </div>
+
+                <div class="item-card">
+                    <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=900&q=80" alt="Camera">
+                    <div class="item-info">
+                        <div>Fujifilm X-T4 Kit</div>
+                        <div>$1,200</div>
+                    </div>
+                    <div class="item-place">Satpuda Hostel</div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
 </body>
 </html>
