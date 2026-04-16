@@ -3,9 +3,329 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>CampusMarket</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700&display=swap');
+        
+        :root {
+            --primary: #1f2937;
+        }
+        
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+        
+        .heading-font {
+            font-family: 'Playfair Display', sans-serif;
+        }
+
+        .product-card {
+            transition: all 0.2s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+
+        .nav-link {
+            transition: color 0.2s;
+        }
+        
+        .nav-link:hover {
+            color: #4b5563;
+        }
+    </style>
 </head>
-<body>
-    
+<body class="bg-[#fffaf0] text-gray-800">
+    <!-- HEADER -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl font-bold heading-font text-gray-900">CampusMarket</span>
+                </div>
+
+                <!-- Navigation -->
+                <nav class="flex items-center gap-8 text-sm font-medium">
+                    <a href="#" class="nav-link text-gray-900 font-semibold">Home</a>
+                    <a href="#" class="nav-link text-gray-600">Browse</a>
+                    <a href="#" class="nav-link text-gray-600">University Deals</a>
+                </nav>
+
+                <!-- Right side -->
+                <div class="flex items-center gap-4">
+                    <button class="w-9 h-9 flex items-center justify-center text-gray-600 hover:text-gray-900">
+                        <i class="fa-solid fa-bell text-xl"></i>
+                    </button>
+                    <button class="w-9 h-9 flex items-center justify-center text-gray-600 hover:text-gray-900">
+                        <i class="fa-solid fa-user text-xl"></i>
+                    </button>
+                    <button onclick="alert('Sell Now clicked!')"
+                            class="bg-black text-white px-6 py-2 rounded-full text-sm font-semibold hover:bg-gray-800 transition">
+                        Sell Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-6 py-8">
+        <!-- HERO -->
+        <div class="text-center mb-10">
+            <h1 class="heading-font text-5xl font-bold text-gray-900 mb-3">
+                The Curated Campus
+            </h1>
+            <p class="text-gray-600 max-w-md mx-auto">
+                Discover premium academic essentials and lifestyle pieces from fellow students.<br>
+                Quality-checked, campus-verified.
+            </p>
+        </div>
+
+        <!-- SEARCH -->
+        <div class="flex justify-center mb-8">
+            <div class="bg-white border border-gray-200 rounded-3xl px-6 py-4 w-full max-w-2xl flex items-center gap-4 shadow-sm">
+                <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
+                <input id="searchInput" 
+                       type="text" 
+                       placeholder="Search textbooks, tech, or furniture..."
+                       class="flex-1 outline-none text-gray-700 bg-transparent text-base">
+                <button onclick="filterProducts()" 
+                        class="bg-[#e5d5b8] hover:bg-[#d4b88f] px-8 py-2.5 rounded-2xl text-sm font-medium transition">
+                    Filters
+                </button>
+            </div>
+        </div>
+
+        <!-- CATEGORIES -->
+        <div class="flex flex-wrap justify-center gap-3 mb-12">
+            <button onclick="filterByCategory('all')" 
+                    id="cat-all"
+                    class="category-btn active px-5 py-2 rounded-3xl text-sm font-medium bg-gray-900 text-white">
+                All Items
+            </button>
+            <button onclick="filterByCategory('textbook')" 
+                    id="cat-textbook"
+                    class="category-btn px-5 py-2 rounded-3xl text-sm font-medium bg-white hover:bg-gray-100">
+                Textbooks
+            </button>
+            <button onclick="filterByCategory('electronics')" 
+                    id="cat-electronics"
+                    class="category-btn px-5 py-2 rounded-3xl text-sm font-medium bg-white hover:bg-gray-100">
+                Electronics
+            </button>
+            <button onclick="filterByCategory('furniture')" 
+                    id="cat-furniture"
+                    class="category-btn px-5 py-2 rounded-3xl text-sm font-medium bg-white hover:bg-gray-100">
+                Home &amp; Dorm
+            </button>
+            <button onclick="filterByCategory('fashion')" 
+                    id="cat-fashion"
+                    class="category-btn px-5 py-2 rounded-3xl text-sm font-medium bg-white hover:bg-gray-100">
+                Fashion
+            </button>
+        </div>
+
+        <!-- PRODUCTS GRID -->
+        <div id="productsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <!-- Populated by JS -->
+        </div>
+
+        <!-- CURATED SECTION -->
+        <div class="mt-20 bg-white rounded-3xl p-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                <!-- Left content -->
+                <div class="lg:col-span-5">
+                    <span class="uppercase tracking-widest text-xs font-medium text-amber-700">CURATED SELECTION</span>
+                    <h2 class="heading-font text-4xl font-bold mt-2 mb-4 leading-tight">
+                        Dorm Essentials for Freshmen.
+                    </h2>
+                    <p class="text-gray-600 mb-8">
+                        Handpicked quality items from graduating seniors to help you start your campus life in style and comfort.
+                    </p>
+                    <button onclick="alert('Exploring collection...')"
+                            class="bg-emerald-700 text-white px-8 py-4 rounded-2xl flex items-center gap-3 hover:bg-emerald-800 transition">
+                        Explore Collection
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Images -->
+                <div class="lg:col-span-7 grid grid-cols-2 gap-6">
+                    <div class="rounded-3xl overflow-hidden shadow-md">
+                        <img src="https://picsum.photos/id/1015/600/400" 
+                             alt="Dorm Bed"
+                             class="w-full h-full object-cover">
+                    </div>
+                    <div class="rounded-3xl overflow-hidden shadow-md">
+                        <img src="https://picsum.photos/id/106/600/400" 
+                             alt="Coffee Setup"
+                             class="w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JSON DATA
+        const products = [
+            {
+                id: 1,
+                title: "MacBook Pro 14\" M2 Max",
+                price: 1850,
+                condition: "BRAND NEW",
+                seller: "CS Senior 2024",
+                image: "https://picsum.photos/id/201/600/400",
+                category: "electronics",
+                badge: "EDITOR'S PICK"
+            },
+            {
+                id: 2,
+                title: "Advanced Quantum Physics",
+                price: 45,
+                condition: "LIGHTLY USED",
+                seller: "Phys 2025",
+                image: "https://picsum.photos/id/24/600/400",
+                category: "textbook"
+            },
+            {
+                id: 3,
+                title: "Smart Watch Series 7",
+                price: 210,
+                condition: "BRAND NEW",
+                seller: "Biz 2024",
+                image: "https://picsum.photos/id/201/600/400",
+                category: "electronics"
+            },
+            {
+                id: 4,
+                title: "Ergonomic Desk Chair",
+                price: 85,
+                condition: "SECOND HAND",
+                seller: "Arch 2023",
+                image: "https://picsum.photos/id/133/600/400",
+                category: "furniture"
+            },
+            {
+                id: 5,
+                title: "Premium Study Kit",
+                price: 35,
+                condition: "BRAND NEW",
+                seller: "Law 2026",
+                image: "https://picsum.photos/id/201/600/400",
+                category: "fashion"
+            },
+            {
+                id: 6,
+                title: "Leather Notebook Set",
+                price: 28,
+                condition: "BRAND NEW",
+                seller: "Eng 2025",
+                image: "https://picsum.photos/id/201/600/400",
+                category: "textbook"
+            }
+        ];
+
+        // Render products
+        function renderProducts(filteredProducts) {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+
+            filteredProducts.forEach(product => {
+                const cardHTML = `
+                    <div class="product-card bg-white rounded-3xl overflow-hidden border border-gray-100">
+                        <div class="relative">
+                            ${product.badge ? `
+                                <div class="absolute top-4 left-4 bg-black text-white text-xs font-medium px-3 py-1 rounded-2xl z-10">
+                                    ${product.badge}
+                                </div>
+                            ` : ''}
+                            
+                            <img src="${product.image}" 
+                                 class="w-full h-56 object-cover">
+                        </div>
+                        
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-semibold text-lg leading-tight">${product.title}</h3>
+                                <p class="text-2xl font-semibold text-emerald-700">$${product.price}</p>
+                            </div>
+                            
+                            <div class="flex items-center gap-2 text-xs mb-4">
+                                <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-3xl">${product.condition}</span>
+                                <span class="text-gray-500">${product.seller}</span>
+                            </div>
+                            
+                            <button onclick="viewDetails(${product.id})"
+                                    class="w-full bg-black text-white py-4 rounded-2xl text-sm font-semibold hover:bg-gray-800 transition">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML += cardHTML;
+            });
+        }
+
+        // Filter functions
+        function filterByCategory(category) {
+            // Reset active states
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-gray-900', 'text-white');
+                btn.classList.add('bg-white', 'hover:bg-gray-100');
+            });
+            
+            if (category === 'all') {
+                document.getElementById('cat-all').classList.add('active', 'bg-gray-900', 'text-white');
+            } else {
+                document.getElementById(`cat-${category}`).classList.add('active', 'bg-gray-900', 'text-white');
+            }
+
+            if (category === 'all') {
+                renderProducts(products);
+            } else {
+                const filtered = products.filter(p => p.category === category);
+                renderProducts(filtered);
+            }
+        }
+
+        function filterProducts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            if (!searchTerm) {
+                renderProducts(products);
+                return;
+            }
+
+            const filtered = products.filter(product => 
+                product.title.toLowerCase().includes(searchTerm)
+            );
+            
+            renderProducts(filtered);
+        }
+
+        function viewDetails(id) {
+            const product = products.find(p => p.id === id);
+            if (product) {
+                alert(`Viewing details for: ${product.title}\nPrice: $${product.price}\nCondition: ${product.condition}`);
+            }
+        }
+
+        // Initialize
+        window.onload = function() {
+            renderProducts(products);
+            
+            // Add enter key support for search
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    filterProducts();
+                }
+            });
+        };
+    </script>
 </body>
 </html>
