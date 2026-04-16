@@ -3,9 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+    <title>Alex Rivers - Campus Curated</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs миг.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
+    <style>
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+        .heading-font {
+            font-family: 'Playfair Display', sans-serif;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="bg-[#fffaf0] text-gray-800">
+
+    <!-- HEADER -->
+    <header class="bg-white border-b">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-8">
+                <h1 class="text-2xl font-bold heading-font">Campus Curated</h1>
+                <nav class="flex gap-6 text-sm font-medium">
+                    <a href="#" class="hover:text-black">Shop</a>
+                    <a href="#" class="hover:text-black">Editorial</a>
+                    <a href="#" class="hover:text-black">About</a>
+                </nav>
+            </div>
+            
+            <div class="flex items-center gap-5">
+                <i class="fa-solid fa-bell text-xl cursor-pointer"></i>
+                <i class="fa-solid fa-bag-shopping text-xl cursor-pointer"></i>
+                <div class="w-8 h-8 bg-gray-300 rounded-full overflow-hidden">
+                    <img src="https://picsum.photos/id/64/200/200" alt="Profile">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-6 py-10">
+        
+        <!-- PROFILE HEADER -->
+        <div class="flex flex-col md:flex-row justify-between items-start gap-6">
+            <div>
+                <h1 class="text-5xl font-bold heading-font">Alex Rivers</h1>
+                <p class="text-lg text-gray-600 mt-1">Design Major • Class of 2024</p>
+                <span class="inline-block bg-emerald-700 text-white text-xs font-medium px-4 py-1 rounded-3xl mt-3">
+                    SENIOR
+                </span>
+            </div>
+        </div>
+
+        <!-- CONTACT & ADDRESS -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
+            <div>
+                <p class="text-xs uppercase tracking-widest text-gray-500 mb-2">Contact Details</p>
+                <p class="flex items-center gap-2 text-gray-700">
+                    <i class="fa-solid fa-phone"></i> 
+                    +1 (555) 012-3456
+                </p>
+            </div>
+            <div>
+                <p class="text-xs uppercase tracking-widest text-gray-500 mb-2">Campus Address</p>
+                <p class="flex items-center gap-2 text-gray-700">
+                    <i class="fa-solid fa-location-dot"></i> 
+                    Nilgiri Hostel, Room 402
+                </p>
+            </div>
+        </div>
+
+        <!-- STATS -->
+        <div class="flex gap-4 mt-10">
+            <div class="bg-white rounded-3xl px-8 py-5 shadow-sm">
+                <p class="text-4xl font-semibold">12</p>
+                <p class="text-sm text-gray-500">ITEMS SOLD</p>
+            </div>
+            <div class="bg-white rounded-3xl px-8 py-5 shadow-sm">
+                <p class="text-4xl font-semibold">28</p>
+                <p class="text-sm text-gray-500">PURCHASES</p>
+            </div>
+        </div>
+
+        <!-- MODE TOGGLE -->
+        <div class="mt-10 flex gap-2">
+            <button onclick="toggleMode(this)" 
+                    class="seller-btn active bg-black text-white px-8 py-3 rounded-3xl font-medium">
+                Seller Mode
+            </button>
+            <button onclick="toggleMode(this)" 
+                    class="buyer-btn px-8 py-3 rounded-3xl font-medium bg-white">
+                Buyer Mode
+            </button>
+        </div>
+
+        <!-- ACTIVE LISTINGS -->
+        <div class="mt-12">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-semibold">Active Listings</h2>
+                <button onclick="alert('List New Item clicked!')"
+                        class="bg-emerald-800 text-white px-6 py-3 rounded-3xl flex items-center gap-2 hover:bg-emerald-900">
+                    <i class="fa-solid fa-plus"></i>
+                    List New Item
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+                <!-- Large Featured Listing -->
+                <div class="lg:col-span-7 bg-white rounded-3xl overflow-hidden card-hover">
+                    <div class="relative">
+                        <span class="absolute top-6 left-6 bg-white text-xs font-medium px-4 py-1 rounded-3xl">PREMIUM</span>
+                        <img src="https://picsum.photos/id/133/800/500" 
+                             class="w-full h-96 object-cover" alt="Ergonomic Chair">
+                    </div>
+                    <div class="p-8">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="text-2xl font-semibold">Ergonomic Studio Chair</h3>
+                                <p class="text-gray-500 mt-1">Lightly used, perfect for long study sessions.</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-4xl font-bold text-emerald-700">$145</p>
+                                <p class="text-xs text-gray-500 mt-1">8 VIEWS TODAY</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Side Listings -->
+                <div class="lg:col-span-5 space-y-6">
+
+                    <!-- Typography Books -->
+                    <div class="bg-white rounded-3xl p-6 flex gap-6 card-hover">
+                        <img src="https://picsum.photos/id/24/200/200" 
+                             class="w-24 h-24 object-cover rounded-2xl" alt="Books">
+                        <div class="flex-1">
+                            <h4 class="font-semibold">Typography Volume 1-3</h4>
+                            <span class="inline-block bg-amber-100 text-amber-700 text-xs px-3 py-1 rounded-3xl mt-2">BOOKS</span>
+                            <p class="text-2xl font-semibold mt-4">$45</p>
+                        </div>
+                    </div>
+
+                    <!-- Watch -->
+                    <div class="bg-white rounded-3xl p-6 flex gap-6 card-hover">
+                        <img src="https://picsum.photos/id/201/200/200" 
+                             class="w-24 h-24 object-cover rounded-2xl" alt="Watch">
+                        <div class="flex-1">
+                            <h4 class="font-semibold">Classic Minimalist Watch</h4>
+                            <span class="inline-block bg-gray-100 text-gray-600 text-xs px-3 py-1 rounded-3xl mt-2">ACCESSORIES</span>
+                            <p class="text-2xl font-semibold mt-4">$30</p>
+                        </div>
+                    </div>
+
+                    <!-- Add Another Listing -->
+                    <div onclick="alert('Add new listing!')"
+                         class="border-2 border-dashed border-gray-300 rounded-3xl h-52 flex flex-col items-center justify-center cursor-pointer hover:border-gray-400 transition">
+                        <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-plus text-2xl text-gray-400"></i>
+                        </div>
+                        <p class="text-gray-500 mt-3 font-medium">Add another listing</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleMode(btn) {
+            document.querySelectorAll('.seller-btn, .buyer-btn').forEach(b => {
+                b.classList.remove('active', 'bg-black', 'text-white');
+                b.classList.add('bg-white');
+            });
+            
+            btn.classList.add('active', 'bg-black', 'text-white');
+        }
+    </script>
 </body>
 </html>
