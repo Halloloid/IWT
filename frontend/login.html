@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>CampusMarket - Sign In</title>
+
+    <style>
+        :root {
+            --primary: #091b2d;
+            --secondary: #6b7c6f;
+            --bg: #f8f3ee;
+            --card: #fff8f2;
+            --tab-bg: #f3e9df;
+            --border: #e6d8cd;
+            --text: #222222;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 430px;
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .brand h1 {
+            font-size: 34px;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .brand p {
+            color: #6d6d6d;
+            font-size: 15px;
+        }
+
+        .card {
+            background: var(--card);
+            padding: 28px;
+            border-radius: 22px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+            border: 1px solid #f0e2d8;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 22px;
+            background: var(--tab-bg);
+            padding: 4px;
+            border-radius: 50px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            border-radius: 50px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            color: var(--primary);
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .form {
+            display: none;
+        }
+
+        .form.active {
+            display: block;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #6d7c70;
+            letter-spacing: 1px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 13px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            font-size: 14px;
+            background: white;
+            color: var(--text);
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 50px;
+            background: var(--primary);
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 6px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .small-text {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 13px;
+            color: #777777;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="brand">
+            <h1>CampusMarket</h1>
+            <p>Your campus marketplace</p>
+        </div>
+
+        <div class="card">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('in')">Login</button>
+                <button class="tab" onclick="showTab('up')">Create Account</button>
+            </div>
+
+            <!-- Login Form -->
+            <form class="form active" id="signinForm">
+                <label>Name</label>
+                <input type="text" name="name" placeholder="Enter your name" required>
+
+                <label>Email</label>
+                <input type="email" name="email" placeholder="Enter your email" required>
+
+                <label>Password</label>
+                <input type="password" name="password" placeholder="Enter your password" required>
+
+                <button type="submit" class="btn">Login</button>
+            </form>
+
+            <!-- Create Account Form -->
+            <form class="form" id="signupForm">
+                <label>Name</label>
+                <input type="text" name="name" placeholder="Enter your name" required>
+
+                <label>Email</label>
+                <input type="email" name="email" placeholder="Enter your email" required>
+
+                <div class="grid">
+                    <div>
+                        <label>Branch</label>
+                        <select name="branch" required>
+                            <option value="">Select</option>
+                            <option value="CSE">CSE</option>
+                            <option value="ECE">ECE</option>
+                            <option value="EEE">EEE</option>
+                            <option value="ME">ME</option>
+                            <option value="CE">CE</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Residence</label>
+                        <select name="residence" required>
+                            <option value="">Select</option>
+                            <option value="Hostelite">Hostelite</option>
+                            <option value="Localite">Localite</option>
+                        </select>
+                    </div>
+                </div>
+
+                <label>Password</label>
+                <input type="password" name="password" placeholder="Create password" required>
+
+                <button type="submit" class="btn">Create Account</button>
+            </form>
+
+            <div class="small-text">
+                Buy, sell and connect inside your campus
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            var tabs = document.querySelectorAll(".tab");
+            var forms = document.querySelectorAll(".form");
+
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+
+            for (var j = 0; j < forms.length; j++) {
+                forms[j].classList.remove("active");
+            }
+
+            if (tabName === "in") {
+                tabs[0].classList.add("active");
+                document.getElementById("signinForm").classList.add("active");
+            } else {
+                tabs[1].classList.add("active");
+                document.getElementById("signupForm").classList.add("active");
+            }
+        }
+    </script>
+</body>
+</html>
