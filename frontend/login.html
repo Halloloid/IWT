@@ -122,6 +122,11 @@
             border-color: var(--primary);
         }
 
+        /* Styles for invalid email (HTML5 validation) */
+        input:invalid:focus {
+            border-color: #e74c3c;
+        }
+
         .btn {
             width: 100%;
             padding: 14px;
@@ -169,7 +174,11 @@
                 <input type="text" name="name" placeholder="Enter your name" required>
 
                 <label>Email</label>
-                <input type="email" name="email" placeholder="Enter your email" required>
+                <!-- Added pattern and title for validation -->
+                <input type="email" name="email" placeholder="user@silicon.ac.in" 
+                       pattern=".+@silicon\.ac\.in" 
+                       title="Please use your institutional email ending in @silicon.ac.in" 
+                       required>
 
                 <label>Password</label>
                 <input type="password" name="password" placeholder="Enter your password" required>
@@ -183,7 +192,11 @@
                 <input type="text" name="name" placeholder="Enter your name" required>
 
                 <label>Email</label>
-                <input type="email" name="email" placeholder="Enter your email" required>
+                <!-- Added pattern and title for validation -->
+                <input type="email" name="email" placeholder="user@silicon.ac.in" 
+                       pattern=".+@silicon\.ac\.in" 
+                       title="Please use your institutional email ending in @silicon.ac.in" 
+                       required>
 
                 <div class="grid">
                     <div>
@@ -241,6 +254,24 @@
                 document.getElementById("signupForm").classList.add("active");
             }
         }
+
+        // JavaScript Validation Logic
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                const emailInput = this.querySelector('input[name="email"]');
+                const emailValue = emailInput.value.toLowerCase();
+
+                // Double check validation before processing
+                if (!emailValue.endsWith('@silicon.ac.in')) {
+                    e.preventDefault(); // Stop the form from submitting
+                    alert("Invalid Email: You must use a @silicon.ac.in address to access CampusMarket.");
+                    emailInput.focus();
+                } else {
+                    // Logic for actual submission (Firebase, API call, etc.) would go here
+                    console.log("Validation passed for: " + emailValue);
+                }
+            });
+        });
     </script>
 </body>
 </html>
