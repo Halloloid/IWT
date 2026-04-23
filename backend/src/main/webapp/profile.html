@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CampusMarket - Profile</title>
+    <style>
+        :root {
+            --primary: #001524;
+            --secondary: #4b644f;
+            --surface: #fff8f5;
+            --primary-soft: rgba(0, 21, 36, 0.08);
+            --secondary-soft: rgba(75, 100, 79, 0.12);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { background: var(--surface); color: var(--primary); padding: 24px; }
+        .container { max-width: 1240px; margin: 0 auto; }
+
+        .navbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 46px; flex-wrap: wrap; gap: 20px; }
+        .logo { font-size: 28px; font-weight: 700; text-decoration: none; color: var(--primary); }
+        .nav-links { display: flex; gap: 24px; flex-wrap: wrap; align-items: center; }
+        .nav-links a { text-decoration: none; color: var(--primary); font-size: 15px; }
+        .nav-links a.active { border-bottom: 2px solid var(--primary); font-weight: 700; padding-bottom: 3px; }
+        .logout-btn { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 999px; font-size: 14px; cursor: pointer; text-decoration: none; }
+
+        .profile h1 { font-size: 58px; margin-bottom: 10px; }
+        .subline { color: var(--secondary); font-size: 22px; margin-bottom: 24px; }
+        .badge { display: inline-block; margin-left: 12px; background: var(--secondary); color: var(--surface); padding: 8px 14px; border-radius: 999px; font-size: 11px; vertical-align: middle; }
+
+        .details { display: flex; gap: 50px; flex-wrap: wrap; margin-bottom: 28px; }
+        .detail-box small { display: block; margin-bottom: 8px; color: var(--secondary); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+        .detail-box p { font-size: 18px; }
+
+        .stats { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 34px; }
+        .stat-card { border: 1px solid var(--primary-soft); border-radius: 22px; padding: 22px 30px; text-align: center; min-width: 120px; }
+        .stat-card strong { display: block; font-size: 36px; }
+        .stat-card span { font-size: 13px; color: #666; }
+
+        .toggle { display: inline-flex; border: 1px solid var(--primary-soft); border-radius: 999px; overflow: hidden; margin-bottom: 42px; }
+        .toggle button { border: none; background: transparent; padding: 15px 30px; cursor: pointer; font-size: 14px; }
+        .toggle .active { background: var(--primary); color: var(--surface); }
+
+        .section-head { display: flex; justify-content: space-between; margin-bottom: 20px; align-items: center; }
+        .section-head h2 { font-size: 22px; }
+        .section-head a { text-decoration: none; color: var(--secondary); font-size: 14px; }
+
+        .listing-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 22px; }
+
+        .item-listing-card { border: 1px solid var(--primary-soft); border-radius: 28px; overflow: hidden; background: var(--surface); }
+        .item-listing-img { width: 100%; height: 200px; object-fit: cover; display: block; }
+        .item-listing-no-img { height: 200px; background: var(--primary-soft); display: flex; align-items: center; justify-content: center; font-size: 48px; }
+        .item-listing-body { padding: 18px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+        .item-listing-body h3 { font-size: 15px; margin-bottom: 4px; }
+        .item-listing-body p { font-size: 12px; color: #888; }
+        .item-listing-body strong { font-size: 20px; white-space: nowrap; }
+
+        .no-items { color: #888; font-size: 15px; padding: 20px 0; }
+        .loading { color: #aaa; font-style: italic; }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <header class="navbar">
+            <a class="logo" href="home.html">CampusMarket</a>
+            <nav class="nav-links">
+                <a href="home.html">Home</a>
+                <a href="post-item.html">Post Item</a>
+                <a class="active" href="profile.html">Profile</a>
+                <a href="LogoutServlet" class="logout-btn">Logout</a>
+            </nav>
+        </header>
+
+        <section class="profile">
+            <h1 id="profileName"><span class="loading">Loading…</span></h1>
+            <p class="subline" id="profileSubline"></p>
+
+            <div class="details">
+                <div class="detail-box">
+                    <small>Email</small>
+                    <p id="profileEmail">—</p>
+                </div>
+                <div class="detail-box">
+                    <small>Phone</small>
+                    <p id="profilePhone">—</p>
+                </div>
+                <div class="detail-box">
+                    <small>Hostel Block</small>
+                    <p id="profileHostel">—</p>
+                </div>
+                <div class="detail-box">
+                    <small>Branch &amp; Year</small>
+                    <p id="profileBranch">—</p>
+                </div>
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <strong id="itemCount">—</strong>
+                    <span>Items Listed</span>
+                </div>
+            </div>
+
+            <div class="toggle">
+                <button class="active" onclick="showMode('seller',this)">Seller Mode</button>
+                <button onclick="showMode('buyer',this)">Buyer Mode</button>
+            </div>
+        </section>
+
+        <div class="section-head">
+            <h2>My Listings</h2>
+            <a href="post-item.html">+ List New Item</a>
+        </div>
+
+        <section class="listing-layout" id="myListings">
+            <p class="loading">Loading your listings…</p>
+        </section>
+
+    </div>
+
+    <script>
+        // Fetch profile data from ProfileServlet (returns JSON)
+        fetch("ProfileServlet")
+            .then(function (r) {
+                if (r.redirected || r.status === 401) {
+                    window.location.href = "signin.html"; return null;
+                }
+                return r.json();
+            })
+            .then(function (data) {
+                if (!data) return;
+
+                document.getElementById("profileName").textContent = data.fullName || "Unknown";
+                document.getElementById("profileSubline").textContent =
+                    (data.branch || "") + (data.yearOfStudy ? " · Year " + data.yearOfStudy : "");
+                document.getElementById("profileEmail").textContent  = data.email       || "—";
+                document.getElementById("profilePhone").textContent  = data.phone       || "—";
+                document.getElementById("profileHostel").textContent = data.hostelBlock || "—";
+                document.getElementById("profileBranch").textContent =
+                    (data.branch || "—") + (data.yearOfStudy ? ", Year " + data.yearOfStudy : "");
+                document.getElementById("itemCount").textContent = data.itemCount != null ? data.itemCount : 0;
+
+                var listingsEl = document.getElementById("myListings");
+                if (data.items && data.items.length > 0) {
+                    listingsEl.innerHTML = data.items.map(function (item) {
+                        var imgHtml = item.imagePath
+                            ? '<img class="item-listing-img" src="' + esc(item.imagePath) + '" alt="' + esc(item.title) + '" onerror="this.outerHTML=\'<div class=item-listing-no-img>📦</div>\'">'
+                            : '<div class="item-listing-no-img">📦</div>';
+                        return '<div class="item-listing-card" onclick="window.location.href=\'item-details.html?id=' + item.itemId + '\'" style="cursor:pointer">' +
+                            imgHtml +
+                            '<div class="item-listing-body">' +
+                                '<div><h3>' + esc(item.title) + '</h3>' +
+                                '<p>' + esc(item.category) + ' · ' + esc(item.conditionType) + '</p></div>' +
+                                '<strong>₹' + parseFloat(item.price).toLocaleString("en-IN") + '</strong>' +
+                            '</div></div>';
+                    }).join("");
+                } else {
+                    listingsEl.innerHTML = '<p class="no-items">You haven\'t listed any items yet. <a href="post-item.html">Post one now!</a></p>';
+                }
+            })
+            .catch(function () { window.location.href = "signin.html"; });
+
+        function showMode(mode, btn) {
+            document.querySelectorAll(".toggle button").forEach(function(b){ b.classList.remove("active"); });
+            btn.classList.add("active");
+        }
+
+        function esc(s) {
+            if (!s) return "";
+            return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+        }
+    </script>
+</body>
+</html>
