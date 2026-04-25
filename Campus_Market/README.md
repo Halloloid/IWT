@@ -82,8 +82,10 @@ Rename and copy to `src/main/webapp/`:
 | LoginServlet      | /LoginServlet       | POST   |
 | PostItemServlet   | /PostItemServlet    | POST   |
 | BrowseServlet     | /BrowseServlet      | GET    |
+| ItemDetailServlet | /ItemDetailServlet  | GET    |
+| ProfileServlet    | /ProfileServlet     | GET    |
+| LogoutServlet     | /LogoutServlet      | GET    |
 
----
 
 ## Troubleshooting
 
