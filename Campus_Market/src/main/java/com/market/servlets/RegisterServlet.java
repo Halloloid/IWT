@@ -101,7 +101,7 @@ public class RegisterServlet extends HttpServlet {
 
             int rows = insertStmt.executeUpdate();
             if (rows > 0) {
-                res.sendRedirect("homepage.html?email=" + URLEncoder.encode(emailValue, "UTF-8"));
+                res.sendRedirect("home.html?email=" + URLEncoder.encode(emailValue, "UTF-8"));
             } else {
                 res.sendRedirect("signin.html?error=failed");
             }
