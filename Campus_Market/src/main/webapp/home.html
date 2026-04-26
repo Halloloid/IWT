@@ -170,96 +170,44 @@
     </div>
 
     <script>
-        // JSON DATA
-        const products = [
-            {
-                id: 1,
-                title: "MacBook Pro 14\" M2 Max",
-                price: 1850,
-                condition: "BRAND NEW",
-                seller: "CS Senior 2024",
-                image: "https://picsum.photos/id/201/600/400",
-                category: "electronics",
-                badge: "EDITOR'S PICK"
-            },
-            {
-                id: 2,
-                title: "Advanced Quantum Physics",
-                price: 45,
-                condition: "LIGHTLY USED",
-                seller: "Phys 2025",
-                image: "https://picsum.photos/id/24/600/400",
-                category: "textbook"
-            },
-            {
-                id: 3,
-                title: "Smart Watch Series 7",
-                price: 210,
-                condition: "BRAND NEW",
-                seller: "Biz 2024",
-                image: "https://picsum.photos/id/201/600/400",
-                category: "electronics"
-            },
-            {
-                id: 4,
-                title: "Ergonomic Desk Chair",
-                price: 85,
-                condition: "SECOND HAND",
-                seller: "Arch 2023",
-                image: "https://picsum.photos/id/133/600/400",
-                category: "furniture"
-            },
-            {
-                id: 5,
-                title: "Premium Study Kit",
-                price: 35,
-                condition: "BRAND NEW",
-                seller: "Law 2026",
-                image: "https://picsum.photos/id/201/600/400",
-                category: "fashion"
-            },
-            {
-                id: 6,
-                title: "Leather Notebook Set",
-                price: 28,
-                condition: "BRAND NEW",
-                seller: "Eng 2025",
-                image: "https://picsum.photos/id/201/600/400",
-                category: "textbook"
-            }
-        ];
+        const params = new URLSearchParams(location.search);
+        const email = params.get('email');
+        const errorEl = document.createElement('div');
+        errorEl.style.cssText = 'color:#b91c1c; margin:20px; text-align:center; display:none;';
+        errorEl.id = 'homeError';
+        document.querySelector('.max-w-7xl').prepend(errorEl);
 
-        // Render products
-        function renderProducts(filteredProducts) {
+        let allProducts = [];
+
+        function showError(message) {
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+        }
+
+        function renderProducts(products) {
             const grid = document.getElementById('productsGrid');
             grid.innerHTML = '';
 
-            filteredProducts.forEach(product => {
+            products.forEach(product => {
                 const cardHTML = `
                     <div class="product-card bg-white rounded-3xl overflow-hidden border border-gray-100">
                         <div class="relative">
-                            ${product.badge ? `
-                                <div class="absolute top-4 left-4 bg-black text-white text-xs font-medium px-3 py-1 rounded-2xl z-10">
-                                    ${product.badge}
-                                </div>
-                            ` : ''}
-                            
-                            <img src="${product.image}" 
+                            <img src="${product.imagePath || 'https://picsum.photos/id/201/600/400'}" 
                                  class="w-full h-56 object-cover">
                         </div>
                         
                         <div class="p-6">
                             <div class="flex justify-between items-start mb-2">
                                 <h3 class="font-semibold text-lg leading-tight">${product.title}</h3>
-                                <p class="text-2xl font-semibold text-emerald-700">$${product.price}</p>
+                                <p class="text-2xl font-semibold text-emerald-700">₹${product.price}</p>
                             </div>
                             
                             <div class="flex items-center gap-2 text-xs mb-4">
-                                <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-3xl">${product.condition}</span>
-                                <span class="text-gray-500">${product.seller}</span>
+                                <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-3xl">${product.conditionType}</span>
+                                <span class="text-gray-500">${product.sellerName}</span>
                             </div>
                             
-                            <button onclick="viewDetails(${product.id})"
+                            <button onclick="viewDetails(${product.itemId})"
                                     class="w-full bg-black text-white py-4 rounded-2xl text-sm font-semibold hover:bg-gray-800 transition">
                                 View Details
                             </button>
@@ -270,9 +218,7 @@
             });
         }
 
-        // Filter functions
         function filterByCategory(category) {
-            // Reset active states
             document.querySelectorAll('.category-btn').forEach(btn => {
                 btn.classList.remove('active', 'bg-gray-900', 'text-white');
                 btn.classList.add('bg-white', 'hover:bg-gray-100');
@@ -280,14 +226,10 @@
             
             if (category === 'all') {
                 document.getElementById('cat-all').classList.add('active', 'bg-gray-900', 'text-white');
+                renderProducts(allProducts);
             } else {
                 document.getElementById(`cat-${category}`).classList.add('active', 'bg-gray-900', 'text-white');
-            }
-
-            if (category === 'all') {
-                renderProducts(products);
-            } else {
-                const filtered = products.filter(p => p.category === category);
+                const filtered = allProducts.filter(p => p.category === category);
                 renderProducts(filtered);
             }
         }
@@ -296,29 +238,37 @@
             const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
             
             if (!searchTerm) {
-                renderProducts(products);
+                renderProducts(allProducts);
                 return;
             }
 
-            const filtered = products.filter(product => 
-                product.title.toLowerCase().includes(searchTerm)
+            const filtered = allProducts.filter(product => 
+                product.title.toLowerCase().includes(searchTerm) ||
+                product.description.toLowerCase().includes(searchTerm)
             );
             
             renderProducts(filtered);
         }
 
         function viewDetails(id) {
-            const product = products.find(p => p.id === id);
-            if (product) {
-                alert(`Viewing details for: ${product.title}\nPrice: $${product.price}\nCondition: ${product.condition}`);
-            }
+            window.location.href = `item-details.html?id=${id}`;
         }
 
-        // Initialize
+        function loadProducts() {
+            fetch('BrowseServlet')
+                .then(response => response.json())
+                .then(products => {
+                    allProducts = products;
+                    renderProducts(products);
+                })
+                .catch(() => {
+                    showError('Unable to load products. Please try again later.');
+                });
+        }
+
         window.onload = function() {
-            renderProducts(products);
+            loadProducts();
             
-            // Add enter key support for search
             document.getElementById('searchInput').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     filterProducts();

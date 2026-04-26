@@ -260,27 +260,27 @@
             <div class="form-section">
                 <div class="input-group">
                     <label>ITEM TITLE</label>
-                    <input type="text" placeholder="Vintage Leica M6, Organic Chemistry Tex">
+                    <input id="itemTitle" type="text" placeholder="Vintage Leica M6, Organic Chemistry Tex" required>
                 </div>
 
                 <div class="input-group">
                     <label>CATEGORY</label>
                     <div class="tag-container">
-                        <button type="button" class="tag active">Textbooks</button>
-                        <button type="button" class="tag">Electronics</button>
-                        <button type="button" class="tag">Home & Dorm</button>
-                        <button type="button" class="tag">Fashion</button>
+                        <button type="button" class="tag active" data-category="textbooks">Textbooks</button>
+                        <button type="button" class="tag" data-category="electronics">Electronics</button>
+                        <button type="button" class="tag" data-category="home-dorm">Home & Dorm</button>
+                        <button type="button" class="tag" data-category="fashion">Fashion</button>
                     </div>
                 </div>
 
                 <div class="input-group">
                     <label>CONDITION</label>
                     <div class="flex-row">
-                        <div class="card selected">
+                        <div class="card selected" data-condition="first hand">
                             <strong>First Hand</strong>
                             <p>Brand new, never used.</p>
                         </div>
-                        <div class="card">
+                        <div class="card" data-condition="second hand">
                             <strong>Second Hand</strong>
                             <p>Pre-loved and verified.</p>
                         </div>
@@ -289,11 +289,16 @@
 
                 <div class="input-group">
                     <label>DESCRIPTION</label>
-                    <textarea placeholder="Describe the story and quality of your item..."></textarea>
+                    <textarea id="itemDescription" placeholder="Describe the story and quality of your item..." required></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label>PRICE</label>
+                    <input id="itemPrice" type="number" step="0.01" placeholder="0.00" min="0" required>
                 </div>
 
                 <div class="form-footer">
-                    <div class="price-display">$ 0.00</div>
+                    <div class="price-display">₹ 0.00</div>
                     <button type="submit" class="submit-btn">Post Listing</button>
                 </div>
             </div>
@@ -317,5 +322,92 @@
         </form>
     </main>
 
+    <script>
+        const params = new URLSearchParams(location.search);
+        const sellerEmail = params.get('email');
+        const errorEl = document.createElement('div');
+        errorEl.style.cssText = 'color:#b91c1c; margin:20px; text-align:center; display:none;';
+        errorEl.id = 'postError';
+        document.querySelector('main').prepend(errorEl);
+
+        function showError(message) {
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+        }
+
+        // Category selection
+        let selectedCategory = 'textbooks';
+        document.querySelectorAll('.tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                selectedCategory = this.getAttribute('data-category');
+            });
+        });
+
+        // Condition selection
+        let selectedCondition = 'first hand';
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedCondition = this.getAttribute('data-condition');
+            });
+        });
+
+        // Price input handling
+        const priceInput = document.getElementById('itemPrice');
+        const priceDisplay = document.querySelector('.price-display');
+
+        if (priceInput && priceDisplay) {
+            priceInput.addEventListener('input', function() {
+                const value = parseFloat(this.value) || 0;
+                priceDisplay.textContent = `₹ ${value.toFixed(2)}`;
+            });
+        }
+
+        // Form submission
+        document.querySelector('.listing-grid').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (!sellerEmail) {
+                showError('Seller email missing. Please log in first.');
+                return;
+            }
+
+            const title = document.getElementById('itemTitle').value.trim();
+            const description = document.getElementById('itemDescription').value.trim();
+            const price = priceInput.value.trim();
+
+            if (!title || !description || !price) {
+                showError('Please fill in all required fields.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('seller_email', sellerEmail);
+            formData.append('title', title);
+            formData.append('category', selectedCategory);
+            formData.append('condition', selectedCondition);
+            formData.append('description', description);
+            formData.append('price', price);
+            formData.append('image_path', 'https://picsum.photos/600/400?random=' + Date.now()); // Placeholder
+
+            fetch('PostItemServlet', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else {
+                    showError('Failed to post item. Please try again.');
+                }
+            })
+            .catch(() => {
+                showError('Unable to connect to server. Please try again later.');
+            });
+        });
+    </script>
 </body>
 </html>
