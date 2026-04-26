@@ -152,6 +152,7 @@
             font-size: 13px;
             color: #777777;
         }
+
     </style>
 </head>
 
@@ -164,17 +165,13 @@
 
         <div class="card">
             <div class="tabs">
-                <button class="tab active" onclick="showTab('in')">Login</button>
-                <button class="tab" onclick="showTab('up')">Create Account</button>
+                <button type="button" class="tab active" onclick="showTab('in')">Login</button>
+                <button type="button" class="tab" onclick="showTab('up')">Create Account</button>
             </div>
 
             <!-- Login Form -->
             <form class="form active" id="signinForm">
-                <label>Name</label>
-                <input type="text" name="name" placeholder="Enter your name" required>
-
                 <label>Email</label>
-                <!-- Added pattern and title for validation -->
                 <input type="email" name="email" placeholder="user@silicon.ac.in" 
                        pattern=".+@silicon\.ac\.in" 
                        title="Please use your institutional email ending in @silicon.ac.in" 
@@ -188,20 +185,25 @@
 
             <!-- Create Account Form -->
             <form class="form" id="signupForm">
-                <label>Name</label>
-                <input type="text" name="name" placeholder="Enter your name" required>
+                <label>SIC</label>
+                <input type="text" name="sic" placeholder="Enter your 7-digit SIC" maxlength="7" required>
+
+                <label>Full Name</label>
+                <input type="text" name="full_name" placeholder="Enter your full name" required>
 
                 <label>Email</label>
-                <!-- Added pattern and title for validation -->
                 <input type="email" name="email" placeholder="user@silicon.ac.in" 
                        pattern=".+@silicon\.ac\.in" 
                        title="Please use your institutional email ending in @silicon.ac.in" 
                        required>
 
+                <label>Phone</label>
+                <input type="text" name="phone" placeholder="Enter your phone number" required>
+
                 <div class="grid">
                     <div>
                         <label>Branch</label>
-                        <select name="branch" required>
+                        <select name="branch">
                             <option value="">Select</option>
                             <option value="CSE">CSE</option>
                             <option value="ECE">ECE</option>
@@ -212,21 +214,25 @@
                     </div>
 
                     <div>
-                        <label>Residence</label>
-                        <select name="residence" required>
+                        <label>Year</label>
+                        <select name="year_of_study">
                             <option value="">Select</option>
-                            <option value="Hostelite">Hostelite</option>
-                            <option value="Localite">Localite</option>
+                            <option value="1">1st Year</option>
+                            <option value="2">2nd Year</option>
+                            <option value="3">3rd Year</option>
+                            <option value="4">4th Year</option>
                         </select>
                     </div>
                 </div>
+
+                <label>Hostel Block</label>
+                <input type="text" name="hostel_block" placeholder="Enter hostel block">
 
                 <label>Password</label>
                 <input type="password" name="password" placeholder="Create password" required>
 
                 <button type="submit" class="btn">Create Account</button>
             </form>
-
             <div class="small-text">
                 Buy, sell and connect inside your campus
             </div>
@@ -234,6 +240,9 @@
     </div>
 
     <script>
+        const signInForm = document.querySelector("#signinForm");
+        const signUpForm = document.querySelector("#signupForm");
+
         function showTab(tabName) {
             var tabs = document.querySelectorAll(".tab");
             var forms = document.querySelectorAll(".form");
@@ -255,22 +264,83 @@
             }
         }
 
-        // JavaScript Validation Logic
-        document.querySelectorAll('form').forEach(form => {
-            form.addEventListener('submit', function(e) {
-                const emailInput = this.querySelector('input[name="email"]');
-                const emailValue = emailInput.value.toLowerCase();
+        signInForm.addEventListener("submit", async function(e) {
+            e.preventDefault();
 
-                // Double check validation before processing
-                if (!emailValue.endsWith('@silicon.ac.in')) {
-                    e.preventDefault(); // Stop the form from submitting
-                    alert("Invalid Email: You must use a @silicon.ac.in address to access CampusMarket.");
-                    emailInput.focus();
-                } else {
-                    // Logic for actual submission (Firebase, API call, etc.) would go here
-                    console.log("Validation passed for: " + emailValue);
-                }
-            });
+            const email = this.querySelector('input[name="email"]').value.trim();
+            const password = this.querySelector('input[name="password"]').value;
+
+            if (!email.endsWith("@silicon.ac.in")) {
+                alert("Please use your @silicon.ac.in email address.");
+                return;
+            }
+
+            const params = {
+                email: email,
+                password: password
+            };
+
+            try {
+                let response = await fetch("LoginServlet", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(params)
+                });
+
+                window.location.href = response.url;
+            } catch (error) {
+                alert("Could not reach the server. Please try again.");
+            }
+        });
+
+        signUpForm.addEventListener("submit", async function(e) {
+            e.preventDefault();
+
+            const sic = this.querySelector('input[name="sic"]').value.trim();
+            const fullName = this.querySelector('input[name="full_name"]').value.trim();
+            const email = this.querySelector('input[name="email"]').value.trim();
+            const phone = this.querySelector('input[name="phone"]').value.trim();
+            const branch = this.querySelector('select[name="branch"]').value;
+            const yearOfStudy = this.querySelector('select[name="year_of_study"]').value;
+            const hostelBlock = this.querySelector('input[name="hostel_block"]').value.trim();
+            const password = this.querySelector('input[name="password"]').value;
+
+            if (!email.endsWith("@silicon.ac.in")) {
+                alert("Please use your @silicon.ac.in email address.");
+                return;
+            }
+
+            if (sic.length !== 7) {
+                alert("SIC must be exactly 7 characters.");
+                return;
+            }
+
+            const params = {
+                sic: sic,
+                full_name: fullName,
+                email: email,
+                phone: phone,
+                branch: branch,
+                year_of_study: yearOfStudy,
+                hostel_block: hostelBlock,
+                password: password
+            };
+
+            try {
+                let response = await fetch("RegisterServlet", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(params)
+                });
+
+                window.location.href = response.url;
+            } catch (error) {
+                alert("Could not reach the server. Please try again.");
+            }
         });
     </script>
 </body>
