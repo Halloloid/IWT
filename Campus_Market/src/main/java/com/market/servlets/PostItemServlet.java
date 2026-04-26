@@ -29,6 +29,16 @@ public class PostItemServlet extends HttpServlet {
         String description = req.getParameter("description");
         String priceStr = req.getParameter("price");
 
+        // Validate required fields
+        if (title == null || title.trim().isEmpty() ||
+            category == null || category.trim().isEmpty() ||
+            condition == null || condition.trim().isEmpty() ||
+            description == null || description.trim().isEmpty() ||
+            priceStr == null || priceStr.trim().isEmpty()) {
+            res.sendRedirect("post-item.html?error=missing_fields");
+            return;
+        }
+
         // Handle file upload
         Part filePart = req.getPart("photo");
         String fileName = null;
@@ -41,6 +51,10 @@ public class PostItemServlet extends HttpServlet {
             if (!uploadDir.exists()) uploadDir.mkdirs();
 
             filePart.write(uploadPath + File.separator + fileName);
+        } else {
+            // Image is required per database schema (image_path NOT NULL)
+            res.sendRedirect("post-item.html?error=no_image");
+            return;
         }
 
         Connection conn = null;
@@ -59,8 +73,13 @@ public class PostItemServlet extends HttpServlet {
             ps.setString(3, category);
             ps.setString(4, condition);
             ps.setString(5, description);
-            ps.setDouble(6, Double.parseDouble(priceStr));
-            ps.setString(7, fileName != null ? UPLOAD_DIR + "/" + fileName : null);
+            try {
+                ps.setDouble(6, Double.parseDouble(priceStr));
+            } catch (NumberFormatException e) {
+                res.sendRedirect("post-item.html?error=invalid_price");
+                return;
+            }
+            ps.setString(7, UPLOAD_DIR + "/" + fileName);
 
             int rows = ps.executeUpdate();
 

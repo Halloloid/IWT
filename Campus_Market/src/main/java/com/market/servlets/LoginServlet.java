@@ -16,13 +16,20 @@ public class LoginServlet extends HttpServlet {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
 
+        // Validate required fields
+        if (email == null || email.trim().isEmpty() ||
+            password == null || password.trim().isEmpty()) {
+            res.sendRedirect("signin.html?error=failed");
+            return;
+        }
+
         Connection conn = null;
         PreparedStatement ps = null;
 
         try {
             conn = DBConnection.getConnection();
 
-            String sql = "SELECT user_id, full_name FROM users " +
+            String sql = "SELECT sic, full_name FROM users " +
                     "WHERE email = ? AND password = ?";
 
             ps = conn.prepareStatement(sql);
@@ -34,7 +41,7 @@ public class LoginServlet extends HttpServlet {
             if (rs.next()) {
                 // Login successful
                 HttpSession session = req.getSession();
-                session.setAttribute("userId", rs.getInt("user_id"));
+                session.setAttribute("userId", rs.getString("sic"));
                 session.setAttribute("userName", rs.getString("full_name"));
                 session.setAttribute("userEmail", email);
 

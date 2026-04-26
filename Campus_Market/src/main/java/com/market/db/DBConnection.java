@@ -7,7 +7,7 @@ public class DBConnection {
     // PostgreSQL connection details
     private static final String URL = "jdbc:postgresql://localhost:5432/campus_market";
     private static final String USER = "postgres";
-    private static final String PASS = "your_password"; // Change this!
+    private static final String PASS = "12345"; 
     private static final String DRIVER = "org.postgresql.Driver";
 
     // Get database connection

@@ -25,7 +25,8 @@ public class RegisterServlet extends HttpServlet {
         // Basic null/empty check
         if (fullName == null || fullName.trim().isEmpty() ||
             email    == null || email.trim().isEmpty()    ||
-            password == null || password.trim().isEmpty()) {
+            password == null || password.trim().isEmpty() ||
+            phone    == null || phone.trim().isEmpty()) {
             res.sendRedirect("signin.html?error=failed");
             return;
         }
@@ -54,7 +55,7 @@ public class RegisterServlet extends HttpServlet {
             conn = DBConnection.getConnection();
 
             // Check duplicate email
-            checkStmt = conn.prepareStatement("SELECT user_id FROM users WHERE email = ?");
+            checkStmt = conn.prepareStatement("SELECT email FROM users WHERE email = ?");
             checkStmt.setString(1, email.trim());
             rs = checkStmt.executeQuery();
             if (rs.next()) {
@@ -69,7 +70,7 @@ public class RegisterServlet extends HttpServlet {
             insertStmt.setString(1, fullName.trim());
             insertStmt.setString(2, email.trim());
             insertStmt.setString(3, password);                              // TODO: hash in production
-            insertStmt.setString(4, phone  != null ? phone.trim()  : "");
+            insertStmt.setString(4, phone.trim());
             insertStmt.setString(5, hostel != null ? hostel.trim() : "");
             insertStmt.setInt   (6, yearOfStudy);
             insertStmt.setString(7, branch != null ? branch.trim() : "");

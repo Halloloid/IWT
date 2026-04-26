@@ -71,6 +71,8 @@ public class ItemDetailServlet extends HttpServlet {
                 + "\"status\":\""       + esc(rs.getString("status"))        + "\","
                 + "\"sellerName\":\""   + esc(rs.getString("seller_name"))   + "\","
                 + "\"sellerEmail\":\""  + esc(rs.getString("seller_email"))  + "\","
+                + "\"sellerPhone\":"    + (rs.getString("seller_phone") != null
+                        ? "\"" + esc(rs.getString("seller_phone")) + "\"" : "null") + ","
                 + "\"hostelBlock\":"    + (rs.getString("hostel_block") != null
                         ? "\"" + esc(rs.getString("hostel_block")) + "\"" : "null")
                 + "}";

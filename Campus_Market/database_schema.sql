@@ -10,7 +10,7 @@ CREATE DATABASE campus_market;
 
 -- Step 3: Users table
 CREATE TABLE users (
-    sic           CHAR(8) PRIMARY KEY,
+    sic           CHAR(7) PRIMARY KEY,
     full_name     VARCHAR(100) NOT NULL,
     email         VARCHAR(100) UNIQUE NOT NULL,
     password      VARCHAR(255) NOT NULL,
@@ -18,11 +18,10 @@ CREATE TABLE users (
     hostel_block  VARCHAR(50),
     year_of_study INTEGER,
     branch        VARCHAR(50),
-    occupation    VARCHAR(10) DEFAULT 'buyer',
+	occupation    VARCHAR(10) DEFAULT 'seller',
     created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Step 4: Items table
 CREATE TABLE items (
     item_id        SERIAL PRIMARY KEY,
     seller_email   VARCHAR(100) NOT NULL,
@@ -37,7 +36,6 @@ CREATE TABLE items (
     FOREIGN KEY (seller_email) REFERENCES users(email) ON DELETE CASCADE
 );
 
--- Step 5: Indexes for performance
 CREATE INDEX idx_items_seller   ON items(seller_email);
 CREATE INDEX idx_items_category ON items(category);
 CREATE INDEX idx_items_status   ON items(status);
