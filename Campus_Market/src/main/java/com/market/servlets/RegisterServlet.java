@@ -5,6 +5,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import java.io.*;
+import java.net.URLEncoder;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -100,11 +101,7 @@ public class RegisterServlet extends HttpServlet {
 
             int rows = insertStmt.executeUpdate();
             if (rows > 0) {
-                HttpSession session = req.getSession();
-                session.setAttribute("userId", sicValue);
-                session.setAttribute("userEmail", emailValue);
-                session.setAttribute("userName", fullNameValue);
-                res.sendRedirect("home.html");
+                res.sendRedirect("homepage.html?email=" + URLEncoder.encode(emailValue, "UTF-8"));
             } else {
                 res.sendRedirect("signin.html?error=failed");
             }

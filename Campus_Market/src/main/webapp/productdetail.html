@@ -48,6 +48,11 @@
             margin-bottom: 18px;
         }
 
+        .back-text a {
+            text-decoration: none;
+            color: inherit;
+        }
+
         .main-section {
             display: grid;
             grid-template-columns: 2fr 1fr;
@@ -203,6 +208,7 @@
             justify-content: center;
             align-items: center;
             font-size: 16px;
+            color: white;
         }
 
         .pickup-main {
@@ -239,55 +245,21 @@
             cursor: pointer;
         }
 
-        .similar-section {
-            margin-top: 55px;
+        @media (max-width: 1220px) {
+            .page {
+                width: auto;
+                padding: 20px;
+            }
         }
 
-        .similar-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+        @media (max-width: 900px) {
+            .main-section {
+                grid-template-columns: 1fr;
+            }
 
-        .similar-top h2 {
-            margin: 0;
-            font-size: 34px;
-            color: #1c2432;
-        }
-
-        .similar-top a {
-            text-decoration: none;
-            color: #666666;
-            font-size: 14px;
-        }
-
-        .similar-list {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 22px;
-        }
-
-        .item-card img {
-            width: 100%;
-            height: 270px;
-            object-fit: cover;
-            border-radius: 18px;
-            display: block;
-        }
-
-        .item-info {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 12px;
-            font-size: 15px;
-            font-weight: bold;
-        }
-
-        .item-place {
-            font-size: 13px;
-            color: #888888;
-            margin-top: 5px;
+            .product-title {
+                font-size: 34px;
+            }
         }
     </style>
 </head>
@@ -299,43 +271,46 @@
             <div class="logo">CampusMarket</div>
 
             <div class="menu">
-                <a href="#">home</a>
-                <a href="#">sell</a>
-                <a href="#">prfilepage</a>
+                <a href="homepage.html">home</a>
+                <a href="createproduct.html">sell</a>
+                <a href="profilepage.html">profile</a>
             </div>
         </div>
 
+        <div class="back-text">
+            <a href="homepage.html">&larr; Back to listings</a>
+        </div>
 
         <div class="main-section">
 
             <div class="left-part">
                 <div class="big-image">
-                    <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=1200&q=80" alt="Laptop">
+                    <img id="mainImage" src="https://picsum.photos/id/201/1200/800" alt="Product Image">
                 </div>
 
                 <div class="small-images">
-                    <img src="https://images.unsplash.com/photo-1517336714739-489689fd1ca8?auto=format&fit=crop&w=900&q=80" alt="Laptop Image">
-                    <img src="https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?auto=format&fit=crop&w=900&q=80" alt="Laptop Side View">
+                    <img id="thumbImage1" src="https://picsum.photos/id/201/900/600" alt="Product Image">
+                    <img id="thumbImage2" src="https://picsum.photos/id/201/900/600" alt="Product Image">
                 </div>
             </div>
 
             <div class="right-part">
                 <div class="category-line">
-                    <span class="label">BRAND NEW</span>
-                    Electronics • Computers
+                    <span class="label" id="conditionBadge">Condition</span>
+                    <span id="categoryText">Category</span>
                 </div>
 
-                <h1 class="product-title">MacBook Pro 14" M2 Max</h1>
+                <h1 class="product-title" id="productTitle">Loading item...</h1>
 
-                <div class="price"> ₹ 1,850</div>
+                <div class="price" id="productPrice">Rs. 0</div>
 
                 <div class="seller-box">
                     <div class="seller-row">
                         <div class="seller-left">
-                            <div class="seller-circle">CS</div>
+                            <div class="seller-circle" id="sellerInitials">NA</div>
                             <div>
-                                <div class="seller-name">CS Senior 2024</div>
-                                <div class="seller-info">★ 4.9 rating • 12 sales</div>
+                                <div class="seller-name" id="sellerName">Seller Name</div>
+                                <div class="seller-info" id="sellerInfo">seller@silicon.ac.in</div>
                             </div>
                         </div>
                         <div class="verified"></div>
@@ -343,68 +318,113 @@
                 </div>
 
                 <div class="section-title">DESCRIPTION</div>
-                <div class="description">
-                    Pristine condition, barely used for one semester. Includes original box and all accessories.
-                    Perfect for heavy engineering or design work. The M2 Max chip provides strong performance
-                    for rendering and compiling.
-                </div>
+                <div class="description" id="productDescription">Loading description...</div>
 
                 <div class="section-title">PICKUP DETAILS</div>
                 <div class="pickup-box">
                     <div class="pickup-row">
-                        <div class="location-icon">👻</div>
+                        <div class="location-icon">&#9679;</div>
                         <div>
-                            <div class="pickup-main">Hostel 2, Room 402</div>
-                            <div class="pickup-sub">Campus Residential Area • 5 min walk from Gate 2</div>
+                            <div class="pickup-main" id="pickupMain">Hostel details unavailable</div>
+                            <div class="pickup-sub" id="pickupSub">Contact seller for exact pickup arrangement</div>
                         </div>
                     </div>
                 </div>
 
-                <button class="buy-btn">Buy Now →</button>
-                <button class="message-btn">Message Seller</button>
+                <button class="buy-btn" id="statusButton">ITEM STATUS</button>
+                <button class="message-btn" id="messageButton">Message Seller</button>
             </div>
 
-        </div>
-
-        <div class="similar-section">
-            <div class="similar-top">
-                <h2>Similar in Electronics</h2>
-                <a href="#">View all</a>
-            </div>
-
-            <div class="similar-list">
-
-                <div class="item-card">
-                    <img src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=900&q=80" alt="Tablet">
-                    <div class="item-info">
-                        <div>iPad Pro 12.9" M1</div>
-                        <div>₹ 890</div>
-                    </div>
-                    <div class="item-place">2 miles away</div>
-                </div>
-
-                <div class="item-card">
-                    <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80" alt="Headphones">
-                    <div class="item-info">
-                        <div>Bose QuietComfort</div>
-                        <div>₹ 210</div>
-                    </div>
-                    <div class="item-place">On-campus pickup</div>
-                </div>
-
-                <div class="item-card">
-                    <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=900&q=80" alt="Camera">
-                    <div class="item-info">
-                        <div>Fujifilm X-T4 Kit</div>
-                        <div>₹ 1,200</div>
-                    </div>
-                    <div class="item-place">Satpuda Hostel</div>
-                </div>
-
-            </div>
         </div>
 
     </div>
+
+    <script>
+        const mainImage = document.querySelector("#mainImage");
+        const thumbImage1 = document.querySelector("#thumbImage1");
+        const thumbImage2 = document.querySelector("#thumbImage2");
+        const conditionBadge = document.querySelector("#conditionBadge");
+        const categoryText = document.querySelector("#categoryText");
+        const productTitle = document.querySelector("#productTitle");
+        const productPrice = document.querySelector("#productPrice");
+        const sellerInitials = document.querySelector("#sellerInitials");
+        const sellerName = document.querySelector("#sellerName");
+        const sellerInfo = document.querySelector("#sellerInfo");
+        const productDescription = document.querySelector("#productDescription");
+        const pickupMain = document.querySelector("#pickupMain");
+        const pickupSub = document.querySelector("#pickupSub");
+        const statusButton = document.querySelector("#statusButton");
+        const messageButton = document.querySelector("#messageButton");
+
+        const params = new URLSearchParams(window.location.search);
+        const itemId = params.get("id");
+
+        const loadItemDetails = async () => {
+            if (!itemId) {
+                productTitle.textContent = "Item not found";
+                productDescription.textContent = "No item id was provided in the page URL.";
+                return;
+            }
+
+            let url = "ItemDetailServlet?id=" + itemId;
+
+            try {
+                let response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                const resp = await response.json();
+
+                if (resp.error) {
+                    productTitle.textContent = "Item not found";
+                    productDescription.textContent = resp.error;
+                    return;
+                }
+
+                const imageSource = resp.imagePath ? resp.imagePath : "https://picsum.photos/id/201/1200/800";
+                mainImage.src = imageSource;
+                thumbImage1.src = imageSource;
+                thumbImage2.src = imageSource;
+                conditionBadge.textContent = resp.conditionType;
+                categoryText.textContent = resp.category;
+                productTitle.textContent = resp.title;
+                productPrice.textContent = "Rs. " + resp.price;
+                sellerInitials.textContent = getInitials(resp.sellerName);
+                sellerName.textContent = resp.sellerName;
+                sellerInfo.textContent = resp.sellerEmail + (resp.sellerPhone ? " | " + resp.sellerPhone : "");
+                productDescription.textContent = resp.description;
+                pickupMain.textContent = resp.hostelBlock ? resp.hostelBlock : "Hostel details unavailable";
+                pickupSub.textContent = resp.status ? "Item is currently " + resp.status : "Contact seller for availability";
+                statusButton.textContent = resp.status ? resp.status.toUpperCase() : "AVAILABLE";
+                messageButton.textContent = resp.sellerPhone ? "Call Seller" : "Email Seller";
+            } catch (error) {
+                productTitle.textContent = "Unable to load item";
+                productDescription.textContent = "Could not reach the server. Please try again.";
+            }
+        };
+
+        function getInitials(name) {
+            if (!name) {
+                return "NA";
+            }
+
+            const parts = name.trim().split(" ");
+            let initials = "";
+            for (let i = 0; i < parts.length && i < 2; i++) {
+                if (parts[i]) {
+                    initials += parts[i].charAt(0).toUpperCase();
+                }
+            }
+            return initials || "NA";
+        }
+
+        window.onload = function() {
+            loadItemDetails();
+        };
+    </script>
 
 </body>
 </html>

@@ -72,16 +72,6 @@
         <url-pattern>/ProfileServlet</url-pattern>
     </servlet-mapping>
 
-    <!-- LogoutServlet: invalidates session, redirects to signin.html -->
-    <servlet>
-        <servlet-name>LogoutServlet</servlet-name>
-        <servlet-class>com.market.servlets.LogoutServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>LogoutServlet</servlet-name>
-        <url-pattern>/LogoutServlet</url-pattern>
-    </servlet-mapping>
-
     <!-- Session timeout: 30 minutes -->
     <session-config>
         <session-timeout>30</session-timeout>
