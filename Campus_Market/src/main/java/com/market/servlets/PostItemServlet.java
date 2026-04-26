@@ -15,15 +15,9 @@ public class PostItemServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
 
-        // Check session
-        HttpSession session = req.getSession(false);
-        if (session == null || session.getAttribute("userEmail") == null) {
-            res.sendRedirect("signin.html");
-            return;
-        }
-
         Map<String, String> body = readRequestData(req);
 
+        String sellerEmail = body.get("seller_email");
         String title = body.get("title");
         String category = body.get("category");
         String condition = body.get("condition");
@@ -32,7 +26,8 @@ public class PostItemServlet extends HttpServlet {
         String imagePath = body.get("image_path");
 
         // Validate required fields
-        if (title == null || title.trim().isEmpty() ||
+        if (sellerEmail == null || sellerEmail.trim().isEmpty() ||
+            title == null || title.trim().isEmpty() ||
             category == null || category.trim().isEmpty() ||
             condition == null || condition.trim().isEmpty() ||
             description == null || description.trim().isEmpty() ||
@@ -53,7 +48,7 @@ public class PostItemServlet extends HttpServlet {
                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
             ps = conn.prepareStatement(sql);
-            ps.setString(1, (String) session.getAttribute("userEmail"));
+            ps.setString(1, sellerEmail.trim());
             ps.setString(2, title);
             ps.setString(3, category);
             ps.setString(4, condition);
@@ -90,6 +85,7 @@ public class PostItemServlet extends HttpServlet {
         }
 
         Map<String, String> data = new HashMap<>();
+        data.put("seller_email", req.getParameter("seller_email"));
         data.put("title", req.getParameter("title"));
         data.put("category", req.getParameter("category"));
         data.put("condition", req.getParameter("condition"));

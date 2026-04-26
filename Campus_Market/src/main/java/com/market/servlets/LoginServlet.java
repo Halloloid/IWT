@@ -5,6 +5,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import java.io.*;
+import java.net.URLEncoder;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,13 +43,7 @@ public class LoginServlet extends HttpServlet {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                // Login successful
-                HttpSession session = req.getSession();
-                session.setAttribute("userId", rs.getString("sic"));
-                session.setAttribute("userName", rs.getString("full_name"));
-                session.setAttribute("userEmail", email);
-
-                res.sendRedirect("home.html");
+                res.sendRedirect("homepage.html?email=" + URLEncoder.encode(email, "UTF-8"));
             } else {
                 res.sendRedirect("signin.html?error=invalid");
             }

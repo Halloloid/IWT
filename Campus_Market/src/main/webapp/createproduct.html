@@ -351,6 +351,8 @@
         const priceInput = document.querySelector("#price");
         const priceDisplay = document.querySelector("#priceDisplay");
         const statusText = document.querySelector("#statusText");
+        const pageParams = new URLSearchParams(window.location.search);
+        const userEmail = pageParams.get("email");
 
         let selectedCategory = "textbook";
         let selectedCondition = "First Hand";
@@ -379,12 +381,18 @@
         postItemForm.addEventListener("submit", async function(e) {
             e.preventDefault();
 
+            if (!userEmail) {
+                statusText.textContent = "Missing user email.";
+                return;
+            }
+
             const title = document.querySelector("#title").value.trim();
             const description = document.querySelector("#description").value.trim();
             const price = document.querySelector("#price").value.trim();
             const imagePath = document.querySelector("#imagePath").value.trim();
 
             const params = {
+                seller_email: userEmail,
                 title: title,
                 category: selectedCategory,
                 condition: selectedCondition,

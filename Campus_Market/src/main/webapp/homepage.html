@@ -51,9 +51,9 @@
 
                 <!-- Navigation -->
                 <nav class="flex items-center gap-8 text-sm font-medium">
-                    <a href="#" class="nav-link text-gray-900 font-semibold">Home</a>
-                    <a href="#" class="nav-link text-gray-600">Browse</a>
-                    <a href="#" class="nav-link text-gray-600">University Deals</a>
+                    <a href="homepage.html" class="nav-link text-gray-900 font-semibold">Home</a>
+                    <a href="homepage.html" class="nav-link text-gray-600">Browse</a>
+                    <a href="profilepage.html" id="profileNavLink" class="nav-link text-gray-600">Profile</a>
                 </nav>
 
                 <!-- Right side -->
@@ -61,10 +61,10 @@
                     <button class="w-9 h-9 flex items-center justify-center text-gray-600 hover:text-gray-900">
                         <i class="fa-solid fa-bell text-xl"></i>
                     </button>
-                    <button class="w-9 h-9 flex items-center justify-center text-gray-600 hover:text-gray-900">
+                    <button id="profileButton" class="w-9 h-9 flex items-center justify-center text-gray-600 hover:text-gray-900">
                         <i class="fa-solid fa-user text-xl"></i>
                     </button>
-                    <button onclick="alert('Sell Now clicked!')"
+                    <button id="sellNowButton"
                             class="bg-black text-white px-6 py-2 rounded-full text-sm font-semibold hover:bg-gray-800 transition">
                         Sell Now
                     </button>
@@ -155,6 +155,8 @@
     <script>
         let products = [];
         let selectedCategory = "all";
+        const pageParams = new URLSearchParams(window.location.search);
+        const userEmail = pageParams.get("email");
 
         function renderProducts(filteredProducts) {
             const grid = document.getElementById('productsGrid');
@@ -244,10 +246,22 @@
         };
 
         function viewDetails(id) {
-            window.location.href = "productdetail.html?id=" + id;
+            const detailsUrl = userEmail
+                ? "productdetail.html?id=" + id + "&email=" + encodeURIComponent(userEmail)
+                : "productdetail.html?id=" + id;
+            window.location.href = detailsUrl;
         }
 
         window.onload = function() {
+            if (userEmail) {
+                document.querySelector("#profileNavLink").href = "profilepage.html?email=" + encodeURIComponent(userEmail);
+                document.querySelector("#profileButton").onclick = function() {
+                    window.location.href = "profilepage.html?email=" + encodeURIComponent(userEmail);
+                };
+                document.querySelector("#sellNowButton").onclick = function() {
+                    window.location.href = "createproduct.html?email=" + encodeURIComponent(userEmail);
+                };
+            }
             loadProducts();
         };
     </script>

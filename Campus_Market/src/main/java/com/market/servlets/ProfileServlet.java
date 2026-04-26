@@ -8,9 +8,9 @@ import java.io.*;
 import java.sql.*;
 
 /**
- * Returns the logged-in user's profile + their item listings as JSON.
+ * Returns a user's profile + their item listings as JSON.
  * Called as: GET /ProfileServlet
- * Requires active session with "userEmail" attribute.
+ * Requires email as query parameter.
  */
 @WebServlet("/ProfileServlet")
 public class ProfileServlet extends HttpServlet {
@@ -18,15 +18,14 @@ public class ProfileServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
 
-        // Guard: must be logged in
-        HttpSession session = req.getSession(false);
-        if (session == null || session.getAttribute("userEmail") == null) {
-            res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            res.sendRedirect("signin.html");
+        String userEmail = req.getParameter("email");
+        if (userEmail == null || userEmail.trim().isEmpty()) {
+            res.setContentType("application/json");
+            res.setCharacterEncoding("UTF-8");
+            res.getWriter().write("{\"error\":\"Missing email\"}");
             return;
         }
-
-        String userEmail = (String) session.getAttribute("userEmail");
+        userEmail = userEmail.trim();
 
         res.setContentType("application/json");
         res.setCharacterEncoding("UTF-8");

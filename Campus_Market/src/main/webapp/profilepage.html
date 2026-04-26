@@ -34,10 +34,6 @@
                     <a href="profilepage.html" class="hover:text-black">Profile</a>
                 </nav>
             </div>
-            
-            <div class="flex items-center gap-5">
-                <a href="LogoutServlet" class="text-sm font-medium hover:text-black">Logout</a>
-            </div>
         </div>
     </header>
 
@@ -98,7 +94,7 @@
         <div class="mt-12">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-semibold">My Listings</h2>
-                <button onclick="window.location.href='createproduct.html'"
+                <button id="listNewItemButton"
                         class="bg-emerald-800 text-white px-6 py-3 rounded-3xl flex items-center gap-2 hover:bg-emerald-900">
                     <i class="fa-solid fa-plus"></i>
                     List New Item
@@ -132,20 +128,25 @@
         const itemCount = document.querySelector("#itemCount");
         const availableCount = document.querySelector("#availableCount");
         const listingGrid = document.querySelector("#listingGrid");
+        const listNewItemButton = document.querySelector("#listNewItemButton");
+        const pageParams = new URLSearchParams(window.location.search);
+        const userEmail = pageParams.get("email");
 
         const loadProfile = async () => {
             try {
-                let response = await fetch("ProfileServlet", {
+                if (!userEmail) {
+                    fullName.textContent = "Profile unavailable";
+                    academicInfo.textContent = "Missing user email.";
+                    listingGrid.innerHTML = "";
+                    return;
+                }
+
+                let response = await fetch("ProfileServlet?email=" + encodeURIComponent(userEmail), {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json"
                     }
                 });
-
-                if (response.redirected) {
-                    window.location.href = response.url;
-                    return;
-                }
 
                 const resp = await response.json();
 
@@ -208,7 +209,7 @@
                                 <span class="inline-block bg-gray-100 text-gray-700 px-3 py-1 rounded-3xl">${item.conditionType}</span>
                                 <span class="inline-block bg-emerald-100 text-emerald-700 px-3 py-1 rounded-3xl">${item.status}</span>
                             </div>
-                            <button onclick="window.location.href='productdetail.html?id=${item.itemId}'"
+                            <button onclick="window.location.href='productdetail.html?id=${item.itemId}&email=${encodeURIComponent(userEmail)}'"
                                     class="w-full mt-6 bg-black text-white py-3 rounded-3xl font-medium">
                                 View Listing
                             </button>
@@ -221,6 +222,11 @@
         }
 
         window.onload = function() {
+            if (userEmail) {
+                listNewItemButton.onclick = function() {
+                    window.location.href = "createproduct.html?email=" + encodeURIComponent(userEmail);
+                };
+            }
             loadProfile();
         };
     </script>
