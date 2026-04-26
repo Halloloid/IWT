@@ -115,16 +115,6 @@
 
         textarea { height: 160px; resize: none; }
 
-        input[type="number"] {
-            width: 100%;
-            padding: 20px;
-            border: none;
-            border-radius: 15px;
-            background: #fff3eb;
-            font-size: 1rem;
-            outline: none;
-        }
-
         /* Flexbox for tags and cards */
         .tag-container {
             display: flex;
@@ -238,12 +228,6 @@
             transform: scale(1.02);
         }
 
-        .status-text {
-            margin-top: 16px;
-            font-size: 0.9rem;
-            color: #9a3412;
-        }
-
         /* Responsive adjustment */
         @media (max-width: 800px) {
             .listing-grid { grid-template-columns: 1fr; gap: 40px; }
@@ -271,32 +255,32 @@
         <h1>Post your Listing.</h1>
         <p class="subtitle">Present your items with the elegance of an editorial feature. Premium listings attract premium buyers.</p>
 
-        <form class="listing-grid" id="postItemForm">
+        <form class="listing-grid">
             
             <div class="form-section">
                 <div class="input-group">
                     <label>ITEM TITLE</label>
-                    <input type="text" id="title" placeholder="Vintage Leica M6, Organic Chemistry Text" required>
+                    <input type="text" placeholder="Vintage Leica M6, Organic Chemistry Tex">
                 </div>
 
                 <div class="input-group">
                     <label>CATEGORY</label>
                     <div class="tag-container">
-                        <button type="button" class="tag active" data-value="textbook">Textbooks</button>
-                        <button type="button" class="tag" data-value="electronics">Electronics</button>
-                        <button type="button" class="tag" data-value="furniture">Home & Dorm</button>
-                        <button type="button" class="tag" data-value="fashion">Fashion</button>
+                        <button type="button" class="tag active">Textbooks</button>
+                        <button type="button" class="tag">Electronics</button>
+                        <button type="button" class="tag">Home & Dorm</button>
+                        <button type="button" class="tag">Fashion</button>
                     </div>
                 </div>
 
                 <div class="input-group">
                     <label>CONDITION</label>
                     <div class="flex-row">
-                        <div class="card selected" data-value="First Hand">
+                        <div class="card selected">
                             <strong>First Hand</strong>
                             <p>Brand new, never used.</p>
                         </div>
-                        <div class="card" data-value="Second Hand">
+                        <div class="card">
                             <strong>Second Hand</strong>
                             <p>Pre-loved and verified.</p>
                         </div>
@@ -305,24 +289,13 @@
 
                 <div class="input-group">
                     <label>DESCRIPTION</label>
-                    <textarea id="description" placeholder="Describe the story and quality of your item..." required></textarea>
-                </div>
-
-                <div class="input-group">
-                    <label>PRICE</label>
-                    <input type="number" id="price" min="0" step="0.01" placeholder="Enter price" required>
-                </div>
-
-                <div class="input-group">
-                    <label>IMAGE LINK</label>
-                    <input type="text" id="imagePath" placeholder="https://example.com/item.jpg" required>
+                    <textarea placeholder="Describe the story and quality of your item..."></textarea>
                 </div>
 
                 <div class="form-footer">
-                    <div class="price-display" id="priceDisplay">Rs. 0.00</div>
+                    <div class="price-display">$ 0.00</div>
                     <button type="submit" class="submit-btn">Post Listing</button>
                 </div>
-                <div class="status-text" id="statusText"></div>
             </div>
 
             <div class="insight-section">
@@ -343,79 +316,6 @@
 
         </form>
     </main>
-
-    <script>
-        const postItemForm = document.querySelector("#postItemForm");
-        const tags = document.querySelectorAll(".tag");
-        const cards = document.querySelectorAll(".card");
-        const priceInput = document.querySelector("#price");
-        const priceDisplay = document.querySelector("#priceDisplay");
-        const statusText = document.querySelector("#statusText");
-        const pageParams = new URLSearchParams(window.location.search);
-        const userEmail = pageParams.get("email");
-
-        let selectedCategory = "textbook";
-        let selectedCondition = "First Hand";
-
-        tags.forEach((tag) => {
-            tag.addEventListener("click", function() {
-                tags.forEach((item) => item.classList.remove("active"));
-                this.classList.add("active");
-                selectedCategory = this.dataset.value;
-            });
-        });
-
-        cards.forEach((card) => {
-            card.addEventListener("click", function() {
-                cards.forEach((item) => item.classList.remove("selected"));
-                this.classList.add("selected");
-                selectedCondition = this.dataset.value;
-            });
-        });
-
-        priceInput.addEventListener("input", function() {
-            const value = this.value.trim();
-            priceDisplay.textContent = value ? "Rs. " + value : "Rs. 0.00";
-        });
-
-        postItemForm.addEventListener("submit", async function(e) {
-            e.preventDefault();
-
-            if (!userEmail) {
-                statusText.textContent = "Missing user email.";
-                return;
-            }
-
-            const title = document.querySelector("#title").value.trim();
-            const description = document.querySelector("#description").value.trim();
-            const price = document.querySelector("#price").value.trim();
-            const imagePath = document.querySelector("#imagePath").value.trim();
-
-            const params = {
-                seller_email: userEmail,
-                title: title,
-                category: selectedCategory,
-                condition: selectedCondition,
-                description: description,
-                price: price,
-                image_path: imagePath
-            };
-
-            try {
-                let response = await fetch("PostItemServlet", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(params)
-                });
-
-                window.location.href = response.url;
-            } catch (error) {
-                statusText.textContent = "Could not reach the server. Please try again.";
-            }
-        });
-    </script>
 
 </body>
 </html>
