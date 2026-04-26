@@ -85,21 +85,6 @@
             </p>
         </div>
 
-        <!-- SEARCH -->
-        <div class="flex justify-center mb-8">
-            <div class="bg-white border border-gray-200 rounded-3xl px-6 py-4 w-full max-w-2xl flex items-center gap-4 shadow-sm">
-                <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
-                <input id="searchInput" 
-                       type="text" 
-                       placeholder="Search textbooks, tech, or furniture..."
-                       class="flex-1 outline-none text-gray-700 bg-transparent text-base">
-                <button onclick="filterProducts()" 
-                        class="bg-[#e5d5b8] hover:bg-[#d4b88f] px-8 py-2.5 rounded-2xl text-sm font-medium transition">
-                    Filters
-                </button>
-            </div>
-        </div>
-
         <!-- CATEGORIES -->
         <div class="flex flex-wrap justify-center gap-3 mb-12">
             <button onclick="filterByCategory('all')" 
@@ -135,9 +120,8 @@
         </div>
 
         <!-- CURATED SECTION -->
-        <div class="mt-20 bg-white rounded-3xl p-10">
+        <!-- <div class="mt-20 bg-white rounded-3xl p-10">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-                <!-- Left content -->
                 <div class="lg:col-span-5">
                     <span class="uppercase tracking-widest text-xs font-medium text-amber-700">CURATED SELECTION</span>
                     <h2 class="heading-font text-4xl font-bold mt-2 mb-4 leading-tight">
@@ -152,8 +136,6 @@
                         <i class="fa-solid fa-arrow-right"></i>
                     </button>
                 </div>
-
-                <!-- Images -->
                 <div class="lg:col-span-7 grid grid-cols-2 gap-6">
                     <div class="rounded-3xl overflow-hidden shadow-md">
                         <img src="https://picsum.photos/id/1015/600/400" 
@@ -167,100 +149,47 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 
     <script>
-        // JSON DATA
-        const products = [
-            {
-                id: 1,
-                title: "MacBook Pro 14\" M2 Max",
-                price: 1850,
-                condition: "BRAND NEW",
-                seller: "CS Senior 2024",
-                image: "https://picsum.photos/id/201/600/400",
-                category: "electronics",
-                badge: "EDITOR'S PICK"
-            },
-            {
-                id: 2,
-                title: "Advanced Quantum Physics",
-                price: 45,
-                condition: "LIGHTLY USED",
-                seller: "Phys 2025",
-                image: "https://picsum.photos/id/24/600/400",
-                category: "textbook"
-            },
-            {
-                id: 3,
-                title: "Smart Watch Series 7",
-                price: 210,
-                condition: "BRAND NEW",
-                seller: "Biz 2024",
-                image: "https://picsum.photos/id/201/600/400",
-                category: "electronics"
-            },
-            {
-                id: 4,
-                title: "Ergonomic Desk Chair",
-                price: 85,
-                condition: "SECOND HAND",
-                seller: "Arch 2023",
-                image: "https://picsum.photos/id/133/600/400",
-                category: "furniture"
-            },
-            {
-                id: 5,
-                title: "Premium Study Kit",
-                price: 35,
-                condition: "BRAND NEW",
-                seller: "Law 2026",
-                image: "https://picsum.photos/id/201/600/400",
-                category: "fashion"
-            },
-            {
-                id: 6,
-                title: "Leather Notebook Set",
-                price: 28,
-                condition: "BRAND NEW",
-                seller: "Eng 2025",
-                image: "https://picsum.photos/id/201/600/400",
-                category: "textbook"
-            }
-        ];
+        let products = [];
+        let selectedCategory = "all";
 
-        // Render products
         function renderProducts(filteredProducts) {
             const grid = document.getElementById('productsGrid');
             grid.innerHTML = '';
+
+            if (filteredProducts.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full bg-white border border-gray-200 rounded-3xl p-10 text-center">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">No items found</h3>
+                        <p class="text-gray-600">Try a different search or category.</p>
+                    </div>
+                `;
+                return;
+            }
 
             filteredProducts.forEach(product => {
                 const cardHTML = `
                     <div class="product-card bg-white rounded-3xl overflow-hidden border border-gray-100">
                         <div class="relative">
-                            ${product.badge ? `
-                                <div class="absolute top-4 left-4 bg-black text-white text-xs font-medium px-3 py-1 rounded-2xl z-10">
-                                    ${product.badge}
-                                </div>
-                            ` : ''}
-                            
-                            <img src="${product.image}" 
+                            <img src="${product.imagePath ? product.imagePath : 'https://picsum.photos/id/201/600/400'}" 
                                  class="w-full h-56 object-cover">
                         </div>
                         
                         <div class="p-6">
                             <div class="flex justify-between items-start mb-2">
                                 <h3 class="font-semibold text-lg leading-tight">${product.title}</h3>
-                                <p class="text-2xl font-semibold text-emerald-700">$${product.price}</p>
+                                <p class="text-2xl font-semibold text-emerald-700">Rs. ${product.price}</p>
                             </div>
                             
                             <div class="flex items-center gap-2 text-xs mb-4">
-                                <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-3xl">${product.condition}</span>
-                                <span class="text-gray-500">${product.seller}</span>
+                                <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-3xl">${product.conditionType}</span>
+                                <span class="text-gray-500">${product.sellerName}</span>
                             </div>
                             
-                            <button onclick="viewDetails(${product.id})"
+                            <button onclick="viewDetails(${product.itemId})"
                                     class="w-full bg-black text-white py-4 rounded-2xl text-sm font-semibold hover:bg-gray-800 transition">
                                 View Details
                             </button>
@@ -271,9 +200,7 @@
             });
         }
 
-        // Filter functions
         function filterByCategory(category) {
-            // Reset active states
             document.querySelectorAll('.category-btn').forEach(btn => {
                 btn.classList.remove('active', 'bg-gray-900', 'text-white');
                 btn.classList.add('bg-white', 'hover:bg-gray-100');
@@ -285,46 +212,43 @@
                 document.getElementById(`cat-${category}`).classList.add('active', 'bg-gray-900', 'text-white');
             }
 
-            if (category === 'all') {
-                renderProducts(products);
-            } else {
-                const filtered = products.filter(p => p.category === category);
-                renderProducts(filtered);
-            }
+            selectedCategory = category;
+            loadProducts();
         }
 
-        function filterProducts() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-            
-            if (!searchTerm) {
-                renderProducts(products);
-                return;
+        const loadProducts = async () => {
+            const params = new URLSearchParams({
+                format: "json"
+            });
+
+            if (selectedCategory !== "all") {
+                params.append("category", selectedCategory);
             }
 
-            const filtered = products.filter(product => 
-                product.title.toLowerCase().includes(searchTerm)
-            );
-            
-            renderProducts(filtered);
-        }
+            let url = "BrowseServlet?" + params.toString();
+
+            try {
+                let response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                const resp = await response.json();
+                products = resp;
+                renderProducts(products);
+            } catch (error) {
+                renderProducts([]);
+            }
+        };
 
         function viewDetails(id) {
-            const product = products.find(p => p.id === id);
-            if (product) {
-                alert(`Viewing details for: ${product.title}\nPrice: $${product.price}\nCondition: ${product.condition}`);
-            }
+            window.location.href = "productdetail.html?id=" + id;
         }
 
-        // Initialize
         window.onload = function() {
-            renderProducts(products);
-            
-            // Add enter key support for search
-            document.getElementById('searchInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    filterProducts();
-                }
-            });
+            loadProducts();
         };
     </script>
 </body>
