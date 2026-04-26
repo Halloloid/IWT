@@ -6,12 +6,11 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import java.io.*;
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @WebServlet("/PostItemServlet")
-@MultipartConfig(maxFileSize = 10485760) // 10MB
 public class PostItemServlet extends HttpServlet {
-
-    private static final String UPLOAD_DIR = "uploads/items";
 
     protected void doPost(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
@@ -23,37 +22,23 @@ public class PostItemServlet extends HttpServlet {
             return;
         }
 
-        String title = req.getParameter("title");
-        String category = req.getParameter("category");
-        String condition = req.getParameter("condition");
-        String description = req.getParameter("description");
-        String priceStr = req.getParameter("price");
+        Map<String, String> body = readRequestData(req);
+
+        String title = body.get("title");
+        String category = body.get("category");
+        String condition = body.get("condition");
+        String description = body.get("description");
+        String priceStr = body.get("price");
+        String imagePath = body.get("image_path");
 
         // Validate required fields
         if (title == null || title.trim().isEmpty() ||
             category == null || category.trim().isEmpty() ||
             condition == null || condition.trim().isEmpty() ||
             description == null || description.trim().isEmpty() ||
-            priceStr == null || priceStr.trim().isEmpty()) {
+            priceStr == null || priceStr.trim().isEmpty() ||
+            imagePath == null || imagePath.trim().isEmpty()) {
             res.sendRedirect("post-item.html?error=missing_fields");
-            return;
-        }
-
-        // Handle file upload
-        Part filePart = req.getPart("photo");
-        String fileName = null;
-
-        if (filePart != null && filePart.getSize() > 0) {
-            fileName = System.currentTimeMillis() + "_" + getFileName(filePart);
-            String uploadPath = getServletContext().getRealPath("") +
-                    File.separator + UPLOAD_DIR;
-            File uploadDir = new File(uploadPath);
-            if (!uploadDir.exists()) uploadDir.mkdirs();
-
-            filePart.write(uploadPath + File.separator + fileName);
-        } else {
-            // Image is required per database schema (image_path NOT NULL)
-            res.sendRedirect("post-item.html?error=no_image");
             return;
         }
 
@@ -79,7 +64,7 @@ public class PostItemServlet extends HttpServlet {
                 res.sendRedirect("post-item.html?error=invalid_price");
                 return;
             }
-            ps.setString(7, UPLOAD_DIR + "/" + fileName);
+            ps.setString(7, imagePath.trim());
 
             int rows = ps.executeUpdate();
 
@@ -98,13 +83,53 @@ public class PostItemServlet extends HttpServlet {
         }
     }
 
-    private String getFileName(Part part) {
-        String contentDisp = part.getHeader("content-disposition");
-        for (String token : contentDisp.split(";")) {
-            if (token.trim().startsWith("filename")) {
-                return token.substring(token.indexOf("=") + 2, token.length() - 1);
+    private Map<String, String> readRequestData(HttpServletRequest req) throws IOException {
+        String contentType = req.getContentType();
+        if (contentType != null && contentType.toLowerCase().startsWith("application/json")) {
+            return parseJsonObject(req.getReader());
+        }
+
+        Map<String, String> data = new HashMap<>();
+        data.put("title", req.getParameter("title"));
+        data.put("category", req.getParameter("category"));
+        data.put("condition", req.getParameter("condition"));
+        data.put("description", req.getParameter("description"));
+        data.put("price", req.getParameter("price"));
+        data.put("image_path", req.getParameter("image_path"));
+        return data;
+    }
+
+    private Map<String, String> parseJsonObject(BufferedReader reader) throws IOException {
+        StringBuilder body = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            body.append(line);
+        }
+
+        Map<String, String> values = new HashMap<>();
+        String json = body.toString().trim();
+        if (json.startsWith("{") && json.endsWith("}")) {
+            json = json.substring(1, json.length() - 1);
+            if (!json.trim().isEmpty()) {
+                String[] pairs = json.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+                for (String pair : pairs) {
+                    String[] keyValue = pair.split(":(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", 2);
+                    if (keyValue.length == 2) {
+                        String key = cleanJsonValue(keyValue[0]);
+                        String value = cleanJsonValue(keyValue[1]);
+                        values.put(key, value);
+                    }
+                }
             }
         }
-        return "file";
+        return values;
+    }
+
+    private String cleanJsonValue(String value) {
+        String cleaned = value.trim();
+        if (cleaned.startsWith("\"") && cleaned.endsWith("\"") && cleaned.length() >= 2) {
+            cleaned = cleaned.substring(1, cleaned.length() - 1);
+        }
+        return cleaned.replace("\\\"", "\"").replace("\\\\", "\\");
     }
 }
