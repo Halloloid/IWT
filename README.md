@@ -1,446 +1,194 @@
-# Campus Market 
-## Site similar to OLX for College Students 
+# Campus Market
 
+A college student OLX-like marketplace built using Java Servlets, Tomcat, HTML, CSS, and JavaScript.
 
-## Detailed API Reference
-
-Base URL when running locally on Tomcat:
-
-```text
-http://localhost:8080/CampusMarket
-```
-
-All endpoints below are implemented as Jakarta servlets in `src/main/java/com/market/servlets/`.
-
-### 1. Register User
-
-**Endpoint**
-
-```http
-POST /RegisterServlet
-```
-
-**Purpose**
-
-Creates a new user account in the `users` table and starts a login session immediately after successful registration.
-
-**Request Parameters**
-
-| Field | Type | Required | Description |
-|------|------|----------|-------------|
-| `full_name` | string | Yes | Full name of the student |
-| `email` | string | Yes | Must end with `@silicon.ac.in` |
-| `password` | string | Yes | Plain text password as currently implemented |
-| `phone` | string | No | User phone number |
-| `hostel_block` | string | No | Hostel or residence block |
-| `year_of_study` | integer | No | Expected values like `1`, `2`, `3`, `4` |
-| `branch` | string | No | Academic branch |
-
-**Behavior**
-
-- Rejects missing `full_name`, `email`, or `password`
-- Rejects emails not ending in `@silicon.ac.in`
-- Checks for duplicate email before insert
-- Inserts the user into the `users` table
-- Creates session values:
-  - `userEmail`
-  - `userName`
-- Redirects to `home.html` after success
-
-**Redirect/Error Outcomes**
-
-| Case | Result |
-|------|--------|
-| Missing required fields | `signin.html?error=failed` |
-| Invalid email domain | `signin.html?error=invalid_email` |
-| Email already exists | `signin.html?error=email_exists` |
-| Database error | `signin.html?error=database` |
-| Success | `home.html` |
-
-**Implementation Notes**
-
-- Passwords are not hashed yet
-- The code comments say the request fields match `signin.html`
-- The current checked-in frontend file is `login.html`, not `signin.html`
+Campus Market lets students post items, browse listings, view item details, and manage their profile in a simple campus marketplace experience.
 
 ---
 
-### 2. Login User
+## 🚀 Project Description
 
-**Endpoint**
+Campus Market is a lightweight web application designed for college students to buy and sell second-hand goods within their campus community. The platform uses Java Servlet technology on Tomcat and stores data in PostgreSQL. Front-end pages are built using HTML, CSS, and JavaScript.
 
-```http
-POST /LoginServlet
-```
-
-**Purpose**
-
-Authenticates an existing user against the `users` table and creates a session.
-
-**Request Parameters**
-
-| Field | Type | Required | Description |
-|------|------|----------|-------------|
-| `email` | string | Yes | User email |
-| `password` | string | Yes | User password |
-
-**Behavior**
-
-- Checks the `users` table for a matching `email` and `password`
-- On success creates session values:
-  - `userId`
-  - `userName`
-  - `userEmail`
-- Redirects to `home.html`
-
-**Redirect/Error Outcomes**
-
-| Case | Result |
-|------|--------|
-| Invalid credentials | `signin.html?error=invalid` |
-| Database error | `signin.html?error=database` |
-| Success | `home.html` |
-
-**Implementation Notes**
-
-- Authentication is based on plain text password comparison
-- The servlet queries `user_id`, but the checked-in SQL schema defines `sic` as the primary key and does not define `user_id`
-- This means login may fail unless the real database differs from `database_schema.sql`
+This project demonstrates:
+- servlet-based form handling
+- file upload support for product images
+- session-based user login
+- JSON-backed browse and item detail endpoints
 
 ---
 
-### 3. Post Item Listing
+## ⭐ Features
 
-**Endpoint**
-
-```http
-POST /PostItemServlet
-```
-
-**Purpose**
-
-Creates a marketplace listing in the `items` table and uploads the item image.
-
-**Authentication**
-
-Requires an active session containing `userEmail`.
-
-**Request Type**
-
-```http
-multipart/form-data
-```
-
-**Request Parameters**
-
-| Field | Type | Required | Description |
-|------|------|----------|-------------|
-| `title` | string | Yes | Item title |
-| `category` | string | Yes | Category such as textbook, electronics, furniture, fashion |
-| `condition` | string | Yes | Item condition |
-| `description` | string | Yes | Listing description |
-| `price` | number | Yes | Item price |
-| `photo` | file | No in code | Uploaded image file |
-
-**Behavior**
-
-- Redirects unauthenticated users to `signin.html`
-- Reads the multipart upload
-- Saves the uploaded file under:
-
-```text
-uploads/items/<timestamp>_<original-file-name>
-```
-
-- Inserts a new row into `items`
-- Uses the logged-in user's `userEmail` as `seller_email`
-- Redirects to `home.html?success=posted` after success
-
-**Redirect/Error Outcomes**
-
-| Case | Result |
-|------|--------|
-| Not logged in | `signin.html` |
-| Insert failed | `post-item.html?error=failed` |
-| Database error | `post-item.html?error=database` |
-| Success | `home.html?success=posted` |
-
-**Upload Limits**
-
-- Maximum file size: `10 MB`
-
-**Implementation Notes**
-
-- Files are stored relative to the deployed servlet context path
-- The code allows `image_path = null`, but the checked-in SQL schema marks `image_path` as `NOT NULL`
-- If no image is uploaded, the insert may fail depending on the actual database schema
+- User registration and login
+- Add new marketplace items with image upload
+- Browse available campus items
+- View item details and seller information
+- User profile view with posted listings
+- Server-side session timeout handling
 
 ---
 
-### 4. Browse Available Items
+## 🧰 Tech Stack
 
-**Endpoint**
-
-```http
-GET /BrowseServlet
-```
-
-**Purpose**
-
-Returns a JSON array of all available listings, with optional category and search filtering.
-
-**Query Parameters**
-
-| Parameter | Type | Required | Description |
-|----------|------|----------|-------------|
-| `category` | string | No | Exact match category filter |
-| `search` | string | No | Text search across title and description |
-| `format` | string | No | Read by code but not used in logic |
-
-**Behavior**
-
-- Selects from `items` joined with `users`
-- Only returns rows where `items.status = 'available'`
-- If `category` is provided, filters by exact category
-- If `search` is provided, filters using `ILIKE` on:
-  - `title`
-  - `description`
-- Orders results by `posted_at DESC`
-- Always responds with JSON
-
-**Response Shape**
-
-```json
-[
-  {
-    "itemId": 1,
-    "title": "Sample Item",
-    "description": "Item description",
-    "price": 120.0,
-    "category": "electronics",
-    "conditionType": "first-hand",
-    "imagePath": "uploads/items/123_file.jpg",
-    "sellerName": "Student Name",
-    "sellerEmail": "student@silicon.ac.in",
-    "hostelBlock": "Hostel A"
-  }
-]
-```
-
-**Error Behavior**
-
-| Case | Result |
-|------|--------|
-| Database error | Returns `[]` |
-
-**Implementation Notes**
-
-- This is the main catalog API
-- `format` is currently unused
-- The README comments say this powers `home.html` and `item-details.html`
+- Java Servlets
+- Jakarta Servlet API
+- Apache Tomcat 10.x
+- PostgreSQL
+- HTML, CSS, JavaScript
+- JDBC PostgreSQL Driver
 
 ---
 
-### 5. Get Single Item Detail
+## 📁 Folder Structure
 
-**Endpoint**
-
-```http
-GET /ItemDetailServlet?id=<item_id>
 ```
-
-**Purpose**
-
-Returns one item with seller information as JSON.
-
-**Query Parameters**
-
-| Parameter | Type | Required | Description |
-|----------|------|----------|-------------|
-| `id` | integer | Yes | Item ID |
-
-**Behavior**
-
-- Validates that `id` exists
-- Validates that `id` is numeric
-- Queries the `items` table joined with `users`
-- Returns exactly one JSON object if found
-
-**Response Shape**
-
-```json
-{
-  "itemId": 1,
-  "title": "Sample Item",
-  "description": "Item description",
-  "price": 120.0,
-  "category": "electronics",
-  "conditionType": "first-hand",
-  "imagePath": "uploads/items/123_file.jpg",
-  "status": "available",
-  "sellerName": "Student Name",
-  "sellerEmail": "student@silicon.ac.in",
-  "hostelBlock": "Hostel A"
-}
+CampusMarket/
+├── database_schema.sql
+├── src/main/java/
+│   └── com/market/
+│       ├── db/
+│       │   └── DBConnection.java
+│       └── servlets/
+│           ├── BrowseServlet.java
+│           ├── ItemDetailServlet.java
+│           ├── LoginServlet.java
+│           ├── PostItemServlet.java
+│           ├── ProfileServlet.java
+│           └── RegisterServlet.java
+├── src/main/webapp/
+│   ├── home.html
+│   ├── item-details.html
+│   ├── post-item.html
+│   ├── profile.html
+│   ├── signin.html
+│   ├── uploads/items/
+│   └── WEB-INF/
+│       ├── lib/
+│       │   └── postgresql-42.7.1.jar
+│       └── web.xml
 ```
-
-**JSON Error Responses**
-
-| Case | Response |
-|------|----------|
-| Missing `id` | `{"error":"Missing item id"}` |
-| Invalid `id` | `{"error":"Invalid item id"}` |
-| Item not found | `{"error":"Item not found"}` |
-| Database error | `{"error":"Database error"}` |
-
-**Implementation Notes**
-
-- The servlet also queries seller phone as `seller_phone`
-- That phone value is not included in the final JSON response
 
 ---
 
-### 6. Get Logged-in User Profile
+## 📌 API Documentation
 
-**Endpoint**
+### RegisterServlet
+- URL: `/RegisterServlet`
+- Method: `POST`
+- Description: Handles new user registration from `signin.html`.
 
-```http
-GET /ProfileServlet
+### LoginServlet
+- URL: `/LoginServlet`
+- Method: `POST`
+- Description: Authenticates users and starts a session.
+
+### PostItemServlet
+- URL: `/PostItemServlet`
+- Method: `POST`
+- Description: Receives item post submissions, including file uploads for images.
+
+### BrowseServlet
+- URL: `/BrowseServlet`
+- Method: `GET`
+- Description: Returns marketplace items for the home/browse page.
+
+### ItemDetailServlet
+- URL: `/ItemDetailServlet`
+- Method: `GET`
+- Description: Returns details for a single item.
+
+### ProfileServlet
+- URL: `/ProfileServlet`
+- Method: `GET`
+- Description: Returns the current user profile and posted listings.
+
+---
+
+## ⚙️ Setup Instructions
+
+### 1. Install prerequisites
+
+- Java JDK 11+ or compatible
+- Apache Tomcat 10.x
+- PostgreSQL
+- PostgreSQL JDBC driver (`postgresql-42.7.1.jar`)
+
+### 2. Create the PostgreSQL database
+
+Run the SQL schema in `database_schema.sql`.
+
+Example using `psql`:
+
+```sql
+CREATE DATABASE campus_market;
+\c campus_market
+\i database_schema.sql
 ```
 
-**Purpose**
+### 3. Configure database connection
 
-Returns the currently logged-in user's profile data and all items posted by that user.
+Edit `src/main/java/com/market/db/DBConnection.java` and update:
 
-**Authentication**
-
-Requires an active session containing `userEmail`.
-
-**Behavior**
-
-- If there is no session, responds with `401` and redirects to `signin.html`
-- Loads user profile fields from the `users` table
-- Loads all listings from the `items` table for the same `seller_email`
-- Orders listings by `posted_at DESC`
-- Returns a single JSON object containing the profile and items array
-
-**Response Shape**
-
-```json
-{
-  "fullName": "Student Name",
-  "email": "student@silicon.ac.in",
-  "phone": "9999999999",
-  "hostelBlock": "Hostel A",
-  "yearOfStudy": 2,
-  "branch": "CSE",
-  "itemCount": 2,
-  "items": [
-    {
-      "itemId": 1,
-      "title": "Sample Item",
-      "category": "electronics",
-      "conditionType": "first-hand",
-      "price": 120.0,
-      "imagePath": "uploads/items/123_file.jpg",
-      "status": "available"
-    }
-  ]
-}
+```java
+private static final String URL = "jdbc:postgresql://localhost:5432/campus_market";
+private static final String USER = "postgres";
+private static final String PASS = "12345";
 ```
 
-**JSON/Error Outcomes**
+Update values to match your PostgreSQL credentials.
 
-| Case | Result |
-|------|--------|
-| Not logged in | HTTP `401` then redirect to `signin.html` |
-| User not found | `{"error":"User not found"}` |
-| Database error | `{"error":"Database error"}` |
+### 4. Add the JDBC driver
 
-**Implementation Notes**
+Download `postgresql-42.7.1.jar` from the PostgreSQL JDBC website and place it into:
 
-- This endpoint depends entirely on the session email
-- It returns both profile details and the user's posted items in one response
-
----
-
-### 7. Logout User
-
-**Endpoint**
-
-```http
-GET /LogoutServlet
+```
+src/main/webapp/WEB-INF/lib/
 ```
 
-**Purpose**
+### 5. Prepare uploads directory
 
-Logs out the current user by invalidating the session.
+Ensure the upload folder exists and is writable:
 
-**Behavior**
+```
+src/main/webapp/uploads/items/
+```
 
-- Reads the current session if it exists
-- Invalidates the session
-- Redirects to `signin.html`
+### 6. Deploy to Tomcat
 
-**Redirect Outcomes**
+- Import the project into Eclipse or your IDE as a Dynamic Web Project.
+- Configure Apache Tomcat 10.x as the project runtime.
+- Add the JDBC driver JAR to the build path.
+- Run the project on the Tomcat server.
 
-| Case | Result |
-|------|--------|
-| Session exists or not | `signin.html` |
+Or build a WAR file and deploy it to Tomcat's `webapps/` directory.
 
----
+### 7. Access the app
 
-## Data Model Used by the APIs
+Open the app at:
 
-### `users` table
-
-Important fields referenced by the servlets:
-
-- `full_name`
-- `email`
-- `password`
-- `phone`
-- `hostel_block`
-- `year_of_study`
-- `branch`
-
-### `items` table
-
-Important fields referenced by the servlets:
-
-- `item_id`
-- `seller_email`
-- `title`
-- `description`
-- `price`
-- `category`
-- `condition_type`
-- `image_path`
-- `status`
-- `posted_at`
+```
+http://localhost:8080/CampusMarket/
+```
 
 ---
 
-## Important Project Notes
+## 🔧 Troubleshooting
 
-These are not separate APIs, but they affect how the current APIs behave:
-
-1. The frontend files currently checked into `src/main/webapp/` are:
-   - `login.html`
-   - `homepage.html`
-   - `createproduct.html`
-   - `productdetail.html`
-   - `profilepage.html`
-
-2. The backend configuration expects:
-   - `signin.html`
-   - `home.html`
-   - `post-item.html`
-   - `item-details.html`
-   - `profile.html`
-
-3. `LoginServlet` and `RegisterServlet` use `user_id`, but `database_schema.sql` defines `sic` instead of `user_id`.
-
-4. The current frontend forms are not fully wired to these servlet endpoints yet, so some backend APIs are implemented but not connected to the checked-in HTML pages.
+- `HTTP 404`: Confirm the project is deployed and the URL is correct.
+- `HTTP 500`: Check Tomcat logs, servlet compilation, and database connectivity.
+- `ClassNotFoundException`: Ensure `postgresql-42.7.1.jar` is in `WEB-INF/lib/`.
+- `jakarta.servlet` errors: Use Tomcat 10 / Jakarta Servlet API.
+- File uploads fail: Check that `uploads/items/` exists and is writable.
+- Database connection errors: Verify PostgreSQL is running and credentials are correct.
 
 ---
+
+## 🌱 Future Improvements
+
+- Add search and category filters
+- Implement secure password hashing
+- Add user dashboard with edit/delete listings
+- Add item image previews and multiple uploads
+- Add email notifications and messaging between users
+- Replace static HTML with a modern frontend framework
