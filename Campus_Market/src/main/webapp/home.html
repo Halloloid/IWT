@@ -51,19 +51,20 @@
 
                 <!-- Navigation -->
                 <nav class="flex items-center gap-8 text-sm font-medium">
-                    <a href="home.html" class="nav-link text-gray-900 font-semibold">Home</a>
-                    <a href="post-item.html" class="nav-link text-gray-600">post item</a>
-                    <a href="profile.html" class="nav-link text-gray-600">profile</a>
+                    <a href="homepage.html" class="nav-link text-gray-900 font-semibold">Home</a>
+                    <a href="homepage.html" class="nav-link text-gray-600">Browse</a>
+                    <a href="profilepage.html" id="profileNavLink" class="nav-link text-gray-600">Profile</a>
                 </nav>
+
                 <!-- Right side -->
                 <div class="flex items-center gap-4">
                     <button class="w-9 h-9 flex items-center justify-center text-gray-600 hover:text-gray-900">
                         <i class="fa-solid fa-bell text-xl"></i>
                     </button>
-                    <button class="w-9 h-9 flex items-center justify-center text-gray-600 hover:text-gray-900">
+                    <button id="profileButton" class="w-9 h-9 flex items-center justify-center text-gray-600 hover:text-gray-900">
                         <i class="fa-solid fa-user text-xl"></i>
                     </button>
-                    <button onclick="alert('Sell Now clicked!')"
+                    <button id="sellNowButton"
                             class="bg-black text-white px-6 py-2 rounded-full text-sm font-semibold hover:bg-gray-800 transition">
                         Sell Now
                     </button>
@@ -82,21 +83,6 @@
                 Discover premium academic essentials and lifestyle pieces from fellow students.<br>
                 Quality-checked, campus-verified.
             </p>
-        </div>
-
-        <!-- SEARCH -->
-        <div class="flex justify-center mb-8">
-            <div class="bg-white border border-gray-200 rounded-3xl px-6 py-4 w-full max-w-2xl flex items-center gap-4 shadow-sm">
-                <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
-                <input id="searchInput" 
-                       type="text" 
-                       placeholder="Search textbooks, tech, or furniture..."
-                       class="flex-1 outline-none text-gray-700 bg-transparent text-base">
-                <button onclick="filterProducts()" 
-                        class="bg-[#e5d5b8] hover:bg-[#d4b88f] px-8 py-2.5 rounded-2xl text-sm font-medium transition">
-                    Filters
-                </button>
-            </div>
         </div>
 
         <!-- CATEGORIES -->
@@ -132,74 +118,40 @@
         <div id="productsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             <!-- Populated by JS -->
         </div>
-
-        <!-- CURATED SECTION -->
-        <div class="mt-20 bg-white rounded-3xl p-10">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-                <!-- Left content -->
-                <div class="lg:col-span-5">
-                    <span class="uppercase tracking-widest text-xs font-medium text-amber-700">CURATED SELECTION</span>
-                    <h2 class="heading-font text-4xl font-bold mt-2 mb-4 leading-tight">
-                        Dorm Essentials for Freshmen.
-                    </h2>
-                    <p class="text-gray-600 mb-8">
-                        Handpicked quality items from graduating seniors to help you start your campus life in style and comfort.
-                    </p>
-                    <button onclick="alert('Exploring collection...')"
-                            class="bg-emerald-700 text-white px-8 py-4 rounded-2xl flex items-center gap-3 hover:bg-emerald-800 transition">
-                        Explore Collection
-                        <i class="fa-solid fa-arrow-right"></i>
-                    </button>
-                </div>
-
-                <!-- Images -->
-                <div class="lg:col-span-7 grid grid-cols-2 gap-6">
-                    <div class="rounded-3xl overflow-hidden shadow-md">
-                        <img src="https://picsum.photos/id/1015/600/400" 
-                             alt="Dorm Bed"
-                             class="w-full h-full object-cover">
-                    </div>
-                    <div class="rounded-3xl overflow-hidden shadow-md">
-                        <img src="https://picsum.photos/id/106/600/400" 
-                             alt="Coffee Setup"
-                             class="w-full h-full object-cover">
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script>
-        const params = new URLSearchParams(location.search);
-        const email = params.get('email');
-        const errorEl = document.createElement('div');
-        errorEl.style.cssText = 'color:#b91c1c; margin:20px; text-align:center; display:none;';
-        errorEl.id = 'homeError';
-        document.querySelector('.max-w-7xl').prepend(errorEl);
+        let products = [];
+        let selectedCategory = "all";
+        const pageParams = new URLSearchParams(window.location.search);
+        const userEmail = pageParams.get("email");
 
-        let allProducts = [];
-
-        function showError(message) {
-            errorEl.textContent = message;
-            errorEl.style.display = 'block';
-        }
-
-        function renderProducts(products) {
+        function renderProducts(filteredProducts) {
             const grid = document.getElementById('productsGrid');
             grid.innerHTML = '';
 
-            products.forEach(product => {
+            if (filteredProducts.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full bg-white border border-gray-200 rounded-3xl p-10 text-center">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">No items found</h3>
+                        <p class="text-gray-600">Try a different search or category.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredProducts.forEach(product => {
                 const cardHTML = `
                     <div class="product-card bg-white rounded-3xl overflow-hidden border border-gray-100">
                         <div class="relative">
-                            <img src="${product.imagePath || 'https://picsum.photos/id/201/600/400'}" 
+                            <img src="${product.imagePath ? product.imagePath : 'https://picsum.photos/id/201/600/400'}" 
                                  class="w-full h-56 object-cover">
                         </div>
                         
                         <div class="p-6">
                             <div class="flex justify-between items-start mb-2">
                                 <h3 class="font-semibold text-lg leading-tight">${product.title}</h3>
-                                <p class="text-2xl font-semibold text-emerald-700">₹${product.price}</p>
+                                <p class="text-2xl font-semibold text-emerald-700">Rs. ${product.price}</p>
                             </div>
                             
                             <div class="flex items-center gap-2 text-xs mb-4">
@@ -226,54 +178,59 @@
             
             if (category === 'all') {
                 document.getElementById('cat-all').classList.add('active', 'bg-gray-900', 'text-white');
-                renderProducts(allProducts);
             } else {
                 document.getElementById(`cat-${category}`).classList.add('active', 'bg-gray-900', 'text-white');
-                const filtered = allProducts.filter(p => p.category === category);
-                renderProducts(filtered);
-            }
-        }
-
-        function filterProducts() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-            
-            if (!searchTerm) {
-                renderProducts(allProducts);
-                return;
             }
 
-            const filtered = allProducts.filter(product => 
-                product.title.toLowerCase().includes(searchTerm) ||
-                product.description.toLowerCase().includes(searchTerm)
-            );
-            
-            renderProducts(filtered);
+            selectedCategory = category;
+            loadProducts();
         }
+
+        const loadProducts = async () => {
+            const params = new URLSearchParams({
+                format: "json"
+            });
+
+            if (selectedCategory !== "all") {
+                params.append("category", selectedCategory);
+            }
+
+            let url = "BrowseServlet?" + params.toString();
+
+            try {
+                let response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                const resp = await response.json();
+                products = resp;
+                renderProducts(products);
+            } catch (error) {
+                renderProducts([]);
+            }
+        };
 
         function viewDetails(id) {
-            window.location.href = `item-details.html?id=${id}`;
-        }
-
-        function loadProducts() {
-            fetch('BrowseServlet')
-                .then(response => response.json())
-                .then(products => {
-                    allProducts = products;
-                    renderProducts(products);
-                })
-                .catch(() => {
-                    showError('Unable to load products. Please try again later.');
-                });
+            const detailsUrl = userEmail
+                ? "productdetail.html?id=" + id + "&email=" + encodeURIComponent(userEmail)
+                : "productdetail.html?id=" + id;
+            window.location.href = detailsUrl;
         }
 
         window.onload = function() {
+            if (userEmail) {
+                document.querySelector("#profileNavLink").href = "profilepage.html?email=" + encodeURIComponent(userEmail);
+                document.querySelector("#profileButton").onclick = function() {
+                    window.location.href = "profilepage.html?email=" + encodeURIComponent(userEmail);
+                };
+                document.querySelector("#sellNowButton").onclick = function() {
+                    window.location.href = "createproduct.html?email=" + encodeURIComponent(userEmail);
+                };
+            }
             loadProducts();
-            
-            document.getElementById('searchInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    filterProducts();
-                }
-            });
         };
     </script>
 </body>
