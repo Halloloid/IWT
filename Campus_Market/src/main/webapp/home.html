@@ -51,19 +51,13 @@
 
                 <!-- Navigation -->
                 <nav class="flex items-center gap-8 text-sm font-medium">
-                    <a href="homepage.html" class="nav-link text-gray-900 font-semibold">Home</a>
-                    <a href="homepage.html" class="nav-link text-gray-600">Browse</a>
+                    <a href="home.html" class="nav-link text-gray-900 font-semibold">Home</a>
+                    <a href="home.html" class="nav-link text-gray-600">Browse</a>
                     <a href="profile.html" id="profileNavLink" class="nav-link text-gray-600">Profile</a>
                 </nav>
 
                 <!-- Right side -->
                 <div class="flex items-center gap-4">
-                    <button class="w-9 h-9 flex items-center justify-center text-gray-600 hover:text-gray-900">
-                        <i class="fa-solid fa-bell text-xl"></i>
-                    </button>
-                    <button id="profileButton" class="w-9 h-9 flex items-center justify-center text-gray-600 hover:text-gray-900">
-                        <i class="fa-solid fa-user text-xl"></i>
-                    </button>
                     <button id="sellNowButton"
                             class="bg-black text-white px-6 py-2 rounded-full text-sm font-semibold hover:bg-gray-800 transition">
                         Sell Now
@@ -227,7 +221,7 @@
                     window.location.href = "profile.html?email=" + encodeURIComponent(userEmail);
                 };
                 document.querySelector("#sellNowButton").onclick = function() {
-                    window.location.href = "createproduct.html?email=" + encodeURIComponent(userEmail);
+                    window.location.href = "post-item.html?email=" + encodeURIComponent(userEmail);
                 };
             }
             loadProducts();
