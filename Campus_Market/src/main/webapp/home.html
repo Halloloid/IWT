@@ -53,7 +53,7 @@
                 <nav class="flex items-center gap-8 text-sm font-medium">
                     <a href="homepage.html" class="nav-link text-gray-900 font-semibold">Home</a>
                     <a href="homepage.html" class="nav-link text-gray-600">Browse</a>
-                    <a href="profilepage.html" id="profileNavLink" class="nav-link text-gray-600">Profile</a>
+                    <a href="profile.html" id="profileNavLink" class="nav-link text-gray-600">Profile</a>
                 </nav>
 
                 <!-- Right side -->
@@ -215,16 +215,16 @@
 
         function viewDetails(id) {
             const detailsUrl = userEmail
-                ? "productdetail.html?id=" + id + "&email=" + encodeURIComponent(userEmail)
-                : "productdetail.html?id=" + id;
+                ? "item-details.html?id=" + id + "&email=" + encodeURIComponent(userEmail)
+                : "item-details.html?id=" + id;
             window.location.href = detailsUrl;
         }
 
         window.onload = function() {
             if (userEmail) {
-                document.querySelector("#profileNavLink").href = "profilepage.html?email=" + encodeURIComponent(userEmail);
+                document.querySelector("#profileNavLink").href = "profile.html?email=" + encodeURIComponent(userEmail);
                 document.querySelector("#profileButton").onclick = function() {
-                    window.location.href = "profilepage.html?email=" + encodeURIComponent(userEmail);
+                    window.location.href = "profile.html?email=" + encodeURIComponent(userEmail);
                 };
                 document.querySelector("#sellNowButton").onclick = function() {
                     window.location.href = "createproduct.html?email=" + encodeURIComponent(userEmail);
