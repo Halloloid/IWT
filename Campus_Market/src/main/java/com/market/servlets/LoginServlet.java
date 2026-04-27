@@ -43,7 +43,7 @@ public class LoginServlet extends HttpServlet {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                res.sendRedirect("homepage.html?email=" + URLEncoder.encode(email, "UTF-8"));
+                res.sendRedirect("home.html?email=" + URLEncoder.encode(email, "UTF-8"));
             } else {
                 res.sendRedirect("signin.html?error=invalid");
             }

@@ -1,99 +1,194 @@
-# Campus Second-Hand Marketplace
-IWT Lab Project — Backend Setup Guide
+# Campus Market
+
+A college student OLX-like marketplace built using Java Servlets, Tomcat, HTML, CSS, and JavaScript.
+
+Campus Market lets students post items, browse listings, view item details, and manage their profile in a simple campus marketplace experience.
 
 ---
 
-## Project Structure
+## 🚀 Project Description
+
+Campus Market is a lightweight web application designed for college students to buy and sell second-hand goods within their campus community. The platform uses Java Servlet technology on Tomcat and stores data in PostgreSQL. Front-end pages are built using HTML, CSS, and JavaScript.
+
+This project demonstrates:
+- servlet-based form handling
+- file upload support for product images
+- session-based user login
+- JSON-backed browse and item detail endpoints
+
+---
+
+## ⭐ Features
+
+- User registration and login
+- Add new marketplace items with image upload
+- Browse available campus items
+- View item details and seller information
+- User profile view with posted listings
+- Server-side session timeout handling
+
+---
+
+## 🧰 Tech Stack
+
+- Java Servlets
+- Jakarta Servlet API
+- Apache Tomcat 10.x
+- PostgreSQL
+- HTML, CSS, JavaScript
+- JDBC PostgreSQL Driver
+
+---
+
+## 📁 Folder Structure
 
 ```
 CampusMarket/
+├── database_schema.sql
 ├── src/main/java/
 │   └── com/market/
 │       ├── db/
-│       │   └── DBConnection.java          ← PostgreSQL connection helper
+│       │   └── DBConnection.java
 │       └── servlets/
-│           ├── RegisterServlet.java       ← User registration
-│           ├── LoginServlet.java          ← User login
-│           ├── PostItemServlet.java       ← Post item + file upload
-│           └── BrowseServlet.java         ← Browse/search items
+│           ├── BrowseServlet.java
+│           ├── ItemDetailServlet.java
+│           ├── LoginServlet.java
+│           ├── PostItemServlet.java
+│           ├── ProfileServlet.java
+│           └── RegisterServlet.java
 ├── src/main/webapp/
-│   ├── signin.html                        ← (clone from GitHub)
-│   ├── home.html                          ← (clone from GitHub)
-│   ├── post-item.html                     ← (clone from GitHub)
-│   ├── item-details.html                  ← (clone from GitHub)
-│   ├── uploads/items/                     ← User uploaded photos
+│   ├── home.html
+│   ├── item-details.html
+│   ├── post-item.html
+│   ├── profile.html
+│   ├── signin.html
+│   ├── uploads/items/
 │   └── WEB-INF/
 │       ├── lib/
-│       │   └── postgresql-42.7.1.jar      ← Download separately
+│       │   └── postgresql-42.7.1.jar
 │       └── web.xml
-└── database_schema.sql                    ← Run this in PostgreSQL
 ```
 
 ---
 
-## Setup Steps
+## 📌 API Documentation
 
-### 1. PostgreSQL Database
+### RegisterServlet
+- URL: `/RegisterServlet`
+- Method: `POST`
+- Description: Handles new user registration from `signin.html`.
+
+### LoginServlet
+- URL: `/LoginServlet`
+- Method: `POST`
+- Description: Authenticates users and starts a session.
+
+### PostItemServlet
+- URL: `/PostItemServlet`
+- Method: `POST`
+- Description: Receives item post submissions, including file uploads for images.
+
+### BrowseServlet
+- URL: `/BrowseServlet`
+- Method: `GET`
+- Description: Returns marketplace items for the home/browse page.
+
+### ItemDetailServlet
+- URL: `/ItemDetailServlet`
+- Method: `GET`
+- Description: Returns details for a single item.
+
+### ProfileServlet
+- URL: `/ProfileServlet`
+- Method: `GET`
+- Description: Returns the current user profile and posted listings.
+
+---
+
+## ⚙️ Setup Instructions
+
+### 1. Install prerequisites
+
+- Java JDK 11+ or compatible
+- Apache Tomcat 10.x
+- PostgreSQL
+- PostgreSQL JDBC driver (`postgresql-42.7.1.jar`)
+
+### 2. Create the PostgreSQL database
+
+Run the SQL schema in `database_schema.sql`.
+
+Example using `psql`:
+
 ```sql
--- Open psql or pgAdmin and run:
 CREATE DATABASE campus_market;
 \c campus_market
--- Then paste contents of database_schema.sql
+\i database_schema.sql
 ```
 
-### 2. Update DB Password
-Open `src/main/java/com/market/db/DBConnection.java` and change:
+### 3. Configure database connection
+
+Edit `src/main/java/com/market/db/DBConnection.java` and update:
+
 ```java
-private static final String PASS = "your_password"; // ← set your postgres password
+private static final String URL = "jdbc:postgresql://localhost:5432/campus_market";
+private static final String USER = "postgres";
+private static final String PASS = "12345";
 ```
 
-### 3. Download JDBC Driver
-Download `postgresql-42.7.1.jar` from https://jdbc.postgresql.org/download/
-and place it in `src/main/webapp/WEB-INF/lib/`
+Update values to match your PostgreSQL credentials.
 
-### 4. Frontend Files
-Clone from: https://github.com/Halloloid/IWT/tree/main/frontend
-Rename and copy to `src/main/webapp/`:
-- createproduct.html  → post-item.html
-- homepage.html       → home.html
-- productdetail.html  → item-details.html
-- profilepage.html    → profile.html
-- Add signin.html
+### 4. Add the JDBC driver
 
-### 5. Eclipse Setup
-1. File → New → Dynamic Web Project
-2. Name: `CampusMarket`
-3. Target runtime: Apache Tomcat v10.1
-4. Dynamic web module version: 5.0
-5. Add External JAR: postgresql-42.7.1.jar via Build Path
+Download `postgresql-42.7.1.jar` from the PostgreSQL JDBC website and place it into:
 
-### 6. Deploy
-- Right-click project → Run As → Run on Server
-- OR export as WAR → copy to `C:\apache-tomcat-10.1.54\webapps\`
-- Access: http://localhost:8080/CampusMarket/
+```
+src/main/webapp/WEB-INF/lib/
+```
+
+### 5. Prepare uploads directory
+
+Ensure the upload folder exists and is writable:
+
+```
+src/main/webapp/uploads/items/
+```
+
+### 6. Deploy to Tomcat
+
+- Import the project into Eclipse or your IDE as a Dynamic Web Project.
+- Configure Apache Tomcat 10.x as the project runtime.
+- Add the JDBC driver JAR to the build path.
+- Run the project on the Tomcat server.
+
+Or build a WAR file and deploy it to Tomcat's `webapps/` directory.
+
+### 7. Access the app
+
+Open the app at:
+
+```
+http://localhost:8080/CampusMarket/
+```
 
 ---
 
-## Servlet URL Mappings
+## 🔧 Troubleshooting
 
-| Servlet           | URL Pattern         | Method |
-|-------------------|---------------------|--------|
-| RegisterServlet   | /RegisterServlet    | POST   |
-| LoginServlet      | /LoginServlet       | POST   |
-| PostItemServlet   | /PostItemServlet    | POST   |
-| BrowseServlet     | /BrowseServlet      | GET    |
-| ItemDetailServlet | /ItemDetailServlet  | GET    |
-| ProfileServlet    | /ProfileServlet     | GET    |
-| LogoutServlet     | /LogoutServlet      | GET    |
+- `HTTP 404`: Confirm the project is deployed and the URL is correct.
+- `HTTP 500`: Check Tomcat logs, servlet compilation, and database connectivity.
+- `ClassNotFoundException`: Ensure `postgresql-42.7.1.jar` is in `WEB-INF/lib/`.
+- `jakarta.servlet` errors: Use Tomcat 10 / Jakarta Servlet API.
+- File uploads fail: Check that `uploads/items/` exists and is writable.
+- Database connection errors: Verify PostgreSQL is running and credentials are correct.
 
+---
 
-## Troubleshooting
+## 🌱 Future Improvements
 
-| Error | Fix |
-|-------|-----|
-| HTTP 404 | Check project deployed to Tomcat |
-| HTTP 500 | Check servlet compilation, PostgreSQL running |
-| ClassNotFoundException | Verify postgresql-42.7.1.jar in WEB-INF/lib/ |
-| javax.servlet error | Change all imports to jakarta.servlet |
-| File upload fails | Check uploads/items/ folder exists with write permissions |
-| Connection error | Check PostgreSQL service is running |
+- Add search and category filters
+- Implement secure password hashing
+- Add user dashboard with edit/delete listings
+- Add item image previews and multiple uploads
+- Add email notifications and messaging between users
+- Replace static HTML with a modern frontend framework

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alex Rivers - Campus Curated</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs миг.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+        .heading-font {
+            font-family: 'Playfair Display', sans-serif;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="bg-[#fffaf0] text-gray-800">
+
+    <!-- HEADER -->
+    <header class="bg-white border-b">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-8">
+                <h1 class="text-2xl font-bold heading-font">Campus Curated</h1>
+                <nav class="flex gap-6 text-sm font-medium">
+                    <a href="#" class="hover:text-black">Shop</a>
+                    <a href="#" class="hover:text-black">Editorial</a>
+                    <a href="#" class="hover:text-black">About</a>
+                </nav>
+            </div>
+            
+            <div class="flex items-center gap-5">
+                <i class="fa-solid fa-bell text-xl cursor-pointer"></i>
+                <i class="fa-solid fa-bag-shopping text-xl cursor-pointer"></i>
+                <div class="w-8 h-8 bg-gray-300 rounded-full overflow-hidden">
+                    <img src="https://picsum.photos/id/64/200/200" alt="Profile">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-6 py-10">
+        
+        <!-- PROFILE HEADER -->
+        <div class="flex flex-col md:flex-row justify-between items-start gap-6">
+            <div>
+                <h1 id="userName" class="text-5xl font-bold heading-font">Alex Rivers</h1>
+                <p id="userEmail" class="text-lg text-gray-600 mt-1"><span id="userBranch">Design Major</span> • Class of <span id="userYear">2024</span></p>
+                <span class="inline-block bg-emerald-700 text-white text-xs font-medium px-4 py-1 rounded-3xl mt-3">
+                    SENIOR
+                </span>
+            </div>
+        </div>
+
+        <!-- CONTACT & ADDRESS -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
+            <div>
+                <p class="text-xs uppercase tracking-widest text-gray-500 mb-2">Contact Details</p>
+                <p class="flex items-center gap-2 text-gray-700">
+                    <i class="fa-solid fa-phone"></i> 
+                    <span id="userPhone">+1 (555) 012-3456</span>
+                </p>
+            </div>
+            <div>
+                <p class="text-xs uppercase tracking-widest text-gray-500 mb-2">Campus Address</p>
+                <p class="flex items-center gap-2 text-gray-700">
+                    <i class="fa-solid fa-location-dot"></i> 
+                    <span id="userHostel">Nilgiri Hostel, Room 402</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- STATS -->
+        <div class="flex gap-4 mt-10">
+            <div class="bg-white rounded-3xl px-8 py-5 shadow-sm">
+                <p id="itemCount" class="text-4xl font-semibold">12</p>
+                <p class="text-sm text-gray-500">ITEMS SOLD</p>
+            </div>
+            <div class="bg-white rounded-3xl px-8 py-5 shadow-sm">
+                <p class="text-4xl font-semibold">28</p>
+                <p class="text-sm text-gray-500">PURCHASES</p>
+            </div>
+        </div>
+
+        <!-- MODE TOGGLE -->
+        <div class="mt-10 flex gap-2">
+            <button onclick="toggleMode(this)" 
+                    class="seller-btn active bg-black text-white px-8 py-3 rounded-3xl font-medium">
+                Seller Mode
+            </button>
+            <button onclick="toggleMode(this)" 
+                    class="buyer-btn px-8 py-3 rounded-3xl font-medium bg-white">
+                Buyer Mode
+            </button>
+        </div>
+
+        <!-- ACTIVE LISTINGS -->
+        <div class="mt-12">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-semibold">Active Listings</h2>
+                <button onclick="window.location.href='post-item.html?email=' + encodeURIComponent(email)"
+                        class="bg-emerald-800 text-white px-6 py-3 rounded-3xl flex items-center gap-2 hover:bg-emerald-900">
+                    <i class="fa-solid fa-plus"></i>
+                    List New Item
+                </button>
+            </div>
+
+            <div id="userItems" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Items will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(location.search);
+        const email = params.get('email');
+        const errorEl = document.createElement('div');
+        errorEl.style.cssText = 'color:#b91c1c; margin:20px; text-align:center; display:none;';
+        errorEl.id = 'profileError';
+        document.querySelector('.max-w-7xl').prepend(errorEl);
+
+        function showError(message) {
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+        }
+
+        function renderUserItems(items) {
+            const container = document.getElementById('userItems');
+            container.innerHTML = '';
+
+            if (items.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-8">No items listed yet.</p>';
+                return;
+            }
+
+            items.forEach(item => {
+                const itemHTML = `
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 card-hover">
+                        <img src="${item.imagePath || 'https://picsum.photos/400/300?random=' + item.itemId}" 
+                             alt="${item.title}" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-semibold text-lg">${item.title}</h3>
+                                <p class="text-xl font-semibold text-emerald-700">₹${item.price}</p>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-3 line-clamp-2">${item.description}</p>
+                            <div class="flex items-center gap-2 mb-4">
+                                <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs">${item.conditionType}</span>
+                                <span class="text-gray-500 text-xs">${item.status}</span>
+                            </div>
+                            <button onclick="viewItem(${item.itemId})" 
+                                    class="w-full bg-black text-white py-3 rounded-xl text-sm font-semibold hover:bg-gray-800 transition">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += itemHTML;
+            });
+        }
+
+        function viewItem(id) {
+            window.location.href = `item-details.html?id=${id}`;
+        }
+
+        if (!email) {
+            showError('Email parameter missing. Please log in first.');
+        } else {
+            fetch(`ProfileServlet?email=${encodeURIComponent(email)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        showError(data.error);
+                        return;
+                    }
+
+                    // Update profile info
+                    document.getElementById('userName').textContent = data.fullName || 'User';
+                    document.getElementById('userEmail').textContent = data.email || '';
+                    document.getElementById('userBranch').textContent = data.branch || 'Not specified';
+                    document.getElementById('userYear').textContent = data.yearOfStudy ? `${data.yearOfStudy}rd Year` : 'Not specified';
+                    document.getElementById('userHostel').textContent = data.hostelBlock || 'Not specified';
+                    document.getElementById('userPhone').textContent = data.phone || 'Not specified';
+                    document.getElementById('itemCount').textContent = data.itemCount || 0;
+
+                    // Update page title
+                    document.title = `${data.fullName || 'User'} - CampusMarket`;
+
+                    // Render items
+                    renderUserItems(data.items || []);
+                })
+                .catch(() => {
+                    showError('Unable to load profile. Please try again later.');
+                });
+        }
+    </script>
+</body>
+</html>
