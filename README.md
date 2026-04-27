@@ -186,9 +186,35 @@ http://localhost:8080/CampusMarket/
 
 ## 🌱 Future Improvements
 
+<<<<<<< HEAD
 - Add search and category filters
 - Implement secure password hashing
 - Add user dashboard with edit/delete listings
 - Add item image previews and multiple uploads
 - Add email notifications and messaging between users
 - Replace static HTML with a modern frontend framework
+=======
+These are not separate APIs, but they affect how the current APIs behave:
+
+1. The frontend files currently checked into `src/main/webapp/` are:
+   - `login.html`
+   - `homepage.html`
+   - `createproduct.html`
+   - `productdetail.html`
+   - `profilepage.html`
+
+2. The backend configuration expects:
+   - `signin.html`
+   - `home.html`
+   - `post-item.html`
+   - `item-details.html`
+   - `profile.html`
+
+3. `LoginServlet` and `RegisterServlet` use `user_id`, but `database_schema.sql` defines `sic` instead of `user_id`.
+
+4. The current frontend forms are not fully wired to these servlet endpoints yet, so some backend APIs are implemented but not connected to the checked-in HTML pages.
+
+---
+### Contribution
+---Updated Readme
+>>>>>>> 367fab9ca4e1f296ecb1d9a5b3255a2f9b676bc1
