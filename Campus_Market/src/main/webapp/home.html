@@ -215,8 +215,8 @@
 
         function viewDetails(id) {
             const detailsUrl = userEmail
-                ? "productdetail.html?id=" + id + "&email=" + encodeURIComponent(userEmail)
-                : "productdetail.html?id=" + id;
+                ? "item-details.html?id=" + id + "&email=" + encodeURIComponent(userEmail)
+                : "item-details.html?id=" + id;
             window.location.href = detailsUrl;
         }
 
