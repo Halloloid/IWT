@@ -1,115 +1,288 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CampusMarket</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700&display=swap');
-        
-        :root {
-            --primary: #1f2937;
+        * {
+            box-sizing: border-box;
         }
-        
         body {
-            font-family: 'Inter', system-ui, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f9fafb;
+            color: #1f2937;
+            margin: 0;
+            padding: 0;
         }
-        
-        .heading-font {
-            font-family: 'Playfair Display', sans-serif;
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 56px;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .category-filters {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 32px;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .empty-state h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 8px;
+            margin-top: 0;
+        }
+
+        .empty-state p {
+            color: #4b5563;
+            margin: 0;
         }
 
         .product-card {
-            transition: all 0.2s ease;
-        }
-        
-        .product-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid #f3f4f6;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .nav-link {
-            transition: color 0.2s;
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
         }
-        
-        .nav-link:hover {
-            color: #4b5563;
+
+        .product-img-wrapper {
+            position: relative;
+        }
+
+        .product-img {
+            width: 100%;
+            height: 224px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .product-content {
+            padding: 24px;
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .product-title {
+            font-weight: 600;
+            font-size: 1.125rem;
+            line-height: 1.25;
+            margin: 0;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #047857;
+            margin: 0;
+        }
+
+        .product-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            margin-bottom: 16px;
+        }
+
+        .condition-badge {
+            background: #d1fae5;
+            color: #047857;
+            padding: 4px 12px;
+            border-radius: 24px;
+        }
+
+        .seller-name {
+            color: #6b7280;
+        }
+
+        .view-btn {
+            width: 100%;
+            background: black;
+            color: white;
+            padding: 16px;
+            border-radius: 16px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .view-btn:hover {
+            background: #1f2937;
+        }
+
+        /* Dark navbar */
+        .site-nav {
+            background: #111827;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .site-nav .logo-text {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .site-nav .logo-text span {
+            color: #10b981;
+        }
+
+        .site-nav a.nav-item {
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 14px;
+            padding: 6px 14px;
+            border-radius: 8px;
+        }
+
+        .site-nav a.nav-item:hover,
+        .site-nav a.nav-item.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Hero section */
+        .hero-banner {
+            background: #111827;
+            padding: 50px 24px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-banner h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .hero-banner h1 span {
+            color: #10b981;
+        }
+
+        .hero-banner p {
+            color: #9ca3af;
+            max-width: 460px;
+            margin: 0 auto;
+        }
+
+        /* Product cards */
+        .product-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Category buttons */
+        .category-btn {
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: bold;
+            background: white;
+            color: #222;
+            border: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .category-btn:hover {
+            background: #f3f4f6;
+        }
+
+        .category-btn.active {
+            background: #111827;
+            color: white;
+            border-color: #111827;
         }
     </style>
 </head>
-<body class="bg-[#fffaf0] text-gray-800">
+
+<body class="bg-gray-50 text-gray-800">
     <!-- HEADER -->
-    <header class="bg-white border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex items-center justify-between h-16">
-                <!-- Logo -->
-                <div class="flex items-center gap-2">
-                    <span class="text-2xl font-bold heading-font text-gray-900">CampusMarket</span>
-                </div>
-
-                <!-- Navigation -->
-                <nav class="flex items-center gap-8 text-sm font-medium">
-                    <a href="home.html" class="nav-link text-gray-900 font-semibold">Home</a>
-                    <a href="home.html" class="nav-link text-gray-600">Browse</a>
-                    <a href="profile.html" id="profileNavLink" class="nav-link text-gray-600">Profile</a>
-                </nav>
-
-                <!-- Right side -->
-                <div class="flex items-center gap-4">
-                    <button id="sellNowButton"
-                            class="bg-black text-white px-6 py-2 rounded-full text-sm font-semibold hover:bg-gray-800 transition">
-                        Sell Now
-                    </button>
-                </div>
-            </div>
+    <header class="site-nav">
+        <div class="nav-inner">
+            <div class="logo-text">Campus<span>Market</span></div>
+            <nav class="nav-links">
+                <a href="home.html" class="nav-item active">Home</a>
+                <a href="post-item.html" id="sellNowButton" class="nav-item">Post Item</a>
+                <a href="profile.html" id="profileNavLink" class="nav-item">Profile</a>
+            </nav>
         </div>
     </header>
+    <span id="profileButton" style="display:none"></span>
 
-    <div class="max-w-7xl mx-auto px-6 py-8">
-        <!-- HERO -->
-        <div class="text-center mb-10">
-            <h1 class="heading-font text-5xl font-bold text-gray-900 mb-3">
-                The Curated Campus
-            </h1>
-            <p class="text-gray-600 max-w-md mx-auto">
-                Discover premium academic essentials and lifestyle pieces from fellow students.<br>
-                Quality-checked, campus-verified.
-            </p>
-        </div>
+    <!-- HERO -->
+    <div class="hero-banner">
+        <h1>Buy &amp; Sell on <span>Campus</span></h1>
+        <p>Discover academic essentials and lifestyle pieces from fellow students. Quality-checked, campus-verified.</p>
+    </div>
 
+    <div class="container">
         <!-- CATEGORIES -->
-        <div class="flex flex-wrap justify-center gap-3 mb-12">
-            <button onclick="filterByCategory('all')" 
-                    id="cat-all"
-                    class="category-btn active px-5 py-2 rounded-3xl text-sm font-medium bg-gray-900 text-white">
-                All Items
-            </button>
-            <button onclick="filterByCategory('textbook')" 
-                    id="cat-textbook"
-                    class="category-btn px-5 py-2 rounded-3xl text-sm font-medium bg-white hover:bg-gray-100">
-                Textbooks
-            </button>
-            <button onclick="filterByCategory('electronics')" 
-                    id="cat-electronics"
-                    class="category-btn px-5 py-2 rounded-3xl text-sm font-medium bg-white hover:bg-gray-100">
-                Electronics
-            </button>
-            <button onclick="filterByCategory('furniture')" 
-                    id="cat-furniture"
-                    class="category-btn px-5 py-2 rounded-3xl text-sm font-medium bg-white hover:bg-gray-100">
-                Home &amp; Dorm
-            </button>
-            <button onclick="filterByCategory('fashion')" 
-                    id="cat-fashion"
-                    class="category-btn px-5 py-2 rounded-3xl text-sm font-medium bg-white hover:bg-gray-100">
-                Fashion
-            </button>
+        <div class="category-filters">
+            <button onclick="filterByCategory('all')" id="cat-all" class="category-btn active">All Items</button>
+            <button onclick="filterByCategory('textbook')" id="cat-textbook" class="category-btn">Textbooks</button>
+            <button onclick="filterByCategory('electronics')" id="cat-electronics" class="category-btn">Electronics</button>
+            <button onclick="filterByCategory('furniture')" id="cat-furniture" class="category-btn">Home &amp; Dorm</button>
+            <button onclick="filterByCategory('fashion')" id="cat-fashion" class="category-btn">Fashion</button>
         </div>
 
         <!-- PRODUCTS GRID -->
-        <div id="productsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        <div id="productsGrid" class="products-grid">
             <!-- Populated by JS -->
         </div>
     </div>
@@ -126,9 +299,9 @@
 
             if (filteredProducts.length === 0) {
                 grid.innerHTML = `
-                    <div class="col-span-full bg-white border border-gray-200 rounded-3xl p-10 text-center">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">No items found</h3>
-                        <p class="text-gray-600">Try a different search or category.</p>
+                    <div class="empty-state">
+                        <h3>No items found</h3>
+                        <p>Try a different search or category.</p>
                     </div>
                 `;
                 return;
@@ -136,25 +309,23 @@
 
             filteredProducts.forEach(product => {
                 const cardHTML = `
-                    <div class="product-card bg-white rounded-3xl overflow-hidden border border-gray-100">
-                        <div class="relative">
-                            <img src="${product.imagePath ? product.imagePath : 'https://picsum.photos/id/201/600/400'}" 
-                                 class="w-full h-56 object-cover">
+                    <div class="product-card">
+                        <div class="product-img-wrapper">
+                            <img src="${product.imagePath ? product.imagePath : 'https://picsum.photos/id/201/600/400'}" class="product-img">
                         </div>
                         
-                        <div class="p-6">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="font-semibold text-lg leading-tight">${product.title}</h3>
-                                <p class="text-2xl font-semibold text-emerald-700">Rs. ${product.price}</p>
+                        <div class="product-content">
+                            <div class="product-header">
+                                <h3 class="product-title">${product.title}</h3>
+                                <p class="product-price">Rs. ${product.price}</p>
                             </div>
                             
-                            <div class="flex items-center gap-2 text-xs mb-4">
-                                <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-3xl">${product.conditionType}</span>
-                                <span class="text-gray-500">${product.sellerName}</span>
+                            <div class="product-meta">
+                                <span class="condition-badge">${product.conditionType}</span>
+                                <span class="seller-name">${product.sellerName}</span>
                             </div>
                             
-                            <button onclick="viewDetails(${product.itemId})"
-                                    class="w-full bg-black text-white py-4 rounded-2xl text-sm font-semibold hover:bg-gray-800 transition">
+                            <button onclick="viewDetails(${product.itemId})" class="view-btn">
                                 View Details
                             </button>
                         </div>
@@ -166,14 +337,13 @@
 
         function filterByCategory(category) {
             document.querySelectorAll('.category-btn').forEach(btn => {
-                btn.classList.remove('active', 'bg-gray-900', 'text-white');
-                btn.classList.add('bg-white', 'hover:bg-gray-100');
+                btn.classList.remove('active');
             });
-            
+
             if (category === 'all') {
-                document.getElementById('cat-all').classList.add('active', 'bg-gray-900', 'text-white');
+                document.getElementById('cat-all').classList.add('active');
             } else {
-                document.getElementById(`cat-${category}`).classList.add('active', 'bg-gray-900', 'text-white');
+                document.getElementById(`cat-${category}`).classList.add('active');
             }
 
             selectedCategory = category;
@@ -214,18 +384,21 @@
             window.location.href = detailsUrl;
         }
 
-        window.onload = function() {
+        window.onload = function () {
             if (userEmail) {
-                document.querySelector("#profileNavLink").href = "profile.html?email=" + encodeURIComponent(userEmail);
-                document.querySelector("#profileButton").onclick = function() {
-                    window.location.href = "profile.html?email=" + encodeURIComponent(userEmail);
-                };
-                document.querySelector("#sellNowButton").onclick = function() {
-                    window.location.href = "post-item.html?email=" + encodeURIComponent(userEmail);
-                };
+                const encodedEmail = encodeURIComponent(userEmail);
+                document.querySelectorAll('a[href="home.html"], a[href="post-item.html"], a[href="profile.html"]').forEach(link => {
+                    link.href = link.href + (link.href.includes('?') ? '&' : '?') + 'email=' + encodedEmail;
+                });
+                if(document.querySelector("#profileButton")) {
+                    document.querySelector("#profileButton").onclick = function () {
+                        window.location.href = "profile.html?email=" + encodedEmail;
+                    };
+                }
             }
             loadProducts();
         };
     </script>
 </body>
+
 </html>
