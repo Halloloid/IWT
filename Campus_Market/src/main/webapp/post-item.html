@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,41 +10,60 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
         }
 
         body {
-            background-color: #fdf6f0; /* Soft cream background */
+            background-color: #f9fafb;
             color: #1a1a1a;
             padding-bottom: 100px;
         }
 
-        /* Navbar */
-        .navbar {
+        /* Dark Navbar */
+        .site-nav {
+            background: #111827;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .site-nav-inner {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 20px 50px;
-            background: transparent;
+            justify-content: space-between;
+            height: 56px;
         }
 
-        .logo { 
-            font-weight: bold; 
-            font-size: 1.2rem; 
-            letter-spacing: -0.5px;
+        .logo-text {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: white;
         }
 
-        nav a {
+        .logo-text span {
+            color: #10b981;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 4px;
+        }
+
+        .nav-links a {
+            color: #9ca3af;
             text-decoration: none;
-            color: #666;
-            margin: 0 15px;
-            font-size: 0.9rem;
+            font-size: 14px;
+            padding: 6px 14px;
+            border-radius: 8px;
         }
 
-        nav a.active {
-            color: #000;
-            border-bottom: 2px solid #000;
-            padding-bottom: 5px;
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .user-icons {
@@ -70,16 +90,16 @@
             margin-bottom: 10px;
         }
 
-        h1 { 
-            font-size: 3.5rem; 
-            margin: 10px 5px; 
+        h1 {
+            font-size: 3.5rem;
+            margin: 10px 5px;
             letter-spacing: 2px;
             font-weight: 800;
         }
 
-        .subtitle { 
-            color: #666; 
-            margin-bottom: 50px; 
+        .subtitle {
+            color: #666;
+            margin-bottom: 50px;
             max-width: 500px;
             line-height: 1.4;
         }
@@ -87,12 +107,14 @@
         /* Grid System for the form and sidebar */
         .listing-grid {
             display: grid;
-            grid-template-columns: 1.4fr 1fr; 
+            grid-template-columns: 1.4fr 1fr;
             gap: 80px;
         }
 
         /* Form Styling */
-        .input-group { margin-bottom: 35px; }
+        .input-group {
+            margin-bottom: 35px;
+        }
 
         label {
             display: block;
@@ -103,24 +125,28 @@
             font-weight: bold;
         }
 
-        input[type="text"], textarea {
+        input[type="text"],
+        textarea {
             width: 100%;
             padding: 20px;
-            border: none;
+            border: 1px solid #111827;
             border-radius: 15px;
-            background: #fff3eb;
+            background: #ffffff;
             font-size: 1rem;
             outline: none;
         }
 
-        textarea { height: 160px; resize: none; }
+        textarea {
+            height: 160px;
+            resize: none;
+        }
 
         input[type="number"] {
             width: 100%;
             padding: 20px;
-            border: none;
+            border: 1px solid #111827;
             border-radius: 15px;
-            background: #fff3eb;
+            background: #ffffff;
             font-size: 1rem;
             outline: none;
         }
@@ -134,15 +160,19 @@
 
         .tag {
             padding: 12px 24px;
-            border: none;
+            border: 1px solid #111827;
             border-radius: 30px;
-            background: #f8e5d9;
+            background: #ffffff;
+            color: #111827;
             cursor: pointer;
             font-size: 0.9rem;
             transition: 0.2s;
         }
 
-        .tag.active { background: #9ba481; color: white; }
+        .tag.active {
+            background: #111827;
+            color: white;
+        }
 
         .flex-row {
             display: flex;
@@ -152,42 +182,52 @@
         .card {
             flex: 1;
             padding: 25px;
-            border: 2px solid transparent;
-            background: #f8e5d9;
+            border: 1px solid #111827;
+            background: #ffffff;
             border-radius: 15px;
             cursor: pointer;
             transition: 0.3s;
         }
 
         .card.selected {
-            background: white;
-            border: 2px solid #eee;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.03);
+            background: #f9fafb;
+            border: 2px solid #111827;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
-        .card strong { display: block; margin-bottom: 5px; }
-        .card p { font-size: 0.8rem; color: #888; line-height: 1.3; }
+        .card strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .card p {
+            font-size: 0.8rem;
+            color: #888;
+            line-height: 1.3;
+        }
 
         /* Insight Card Styling */
         .insight-section {
             display: flex;
             flex-direction: column;
-            justify-content: flex-end; /* Aligns the card lower, matching the original layout */
+            justify-content: flex-end;
+            /* Aligns the card lower, matching the original layout */
             padding-bottom: 80px;
         }
 
         .insight-card {
-            background: #fff3eb;
+            background: #ffffff;
             padding: 40px;
             border-radius: 20px;
+            border: 1px solid #111827;
         }
 
-        .insight-card h3 { 
-            font-size: 1rem; 
-            margin-bottom: 10px; 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
+        .insight-card h3 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .insight-item {
@@ -196,16 +236,16 @@
             margin-top: 25px;
         }
 
-        .num { 
-            font-weight: bold; 
-            color: #d8d0ca; 
-            font-size: 1.4rem; 
+        .num {
+            font-weight: bold;
+            color: #d8d0ca;
+            font-size: 1.4rem;
         }
 
-        .insight-item p { 
-            font-size: 0.85rem; 
-            color: #555; 
-            line-height: 1.5; 
+        .insight-item p {
+            font-size: 0.85rem;
+            color: #555;
+            line-height: 1.5;
         }
 
         /* Footer Actions */
@@ -216,10 +256,10 @@
             margin-top: 20px;
         }
 
-        .price-display { 
-            font-size: 1.3rem; 
-            font-weight: 600; 
-            color: #999; 
+        .price-display {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #999;
         }
 
         .submit-btn {
@@ -243,30 +283,30 @@
             font-size: 0.9rem;
             color: #9a3412;
         }
-
-        /* Responsive adjustment */
-        @media (max-width: 800px) {
-            .listing-grid { grid-template-columns: 1fr; gap: 40px; }
-            .navbar { padding: 20px; }
-        }
     </style>
 </head>
+
 <body>
 
-    <header class="navbar">
-        <div class="logo">Campus Curated</div>
-        <nav>
-            <a href="#" class="active">Sell</a>
-        </nav>
+    <header class="site-nav">
+        <div class="site-nav-inner">
+            <div class="logo-text">Campus<span>Market</span></div>
+            <div class="nav-links">
+                <a href="home.html">Home</a>
+                <a href="post-item.html" class="active">Post Item</a>
+                <a href="profile.html">Profile</a>
+            </div>
+        </div>
     </header>
 
     <main class="container">
         <span class="badge">MARKETPLACE ENTRY</span>
         <h1>Post your Listing.</h1>
-        <p class="subtitle">Present your items with the elegance of an editorial feature. Premium listings attract premium buyers.</p>
+        <p class="subtitle">Present your items with the elegance of an editorial feature. Premium listings attract
+            premium buyers.</p>
 
         <form class="listing-grid" id="postItemForm">
-            
+
             <div class="form-section">
                 <div class="input-group">
                     <label>ITEM TITLE</label>
@@ -299,7 +339,8 @@
 
                 <div class="input-group">
                     <label>DESCRIPTION</label>
-                    <textarea id="description" placeholder="Describe the story and quality of your item..." required></textarea>
+                    <textarea id="description" placeholder="Describe the story and quality of your item..."
+                        required></textarea>
                 </div>
 
                 <div class="input-group">
@@ -322,12 +363,12 @@
             <div class="insight-section">
                 <div class="insight-card">
                     <h3>💡 Seller Insight</h3>
-                    
+
                     <div class="insight-item">
                         <span class="num">01</span>
                         <p>Natural daylight creates the most trust for buyers checking condition.</p>
                     </div>
-                    
+
                     <div class="insight-item">
                         <span class="num">02</span>
                         <p>Be specific about highlighting minor flaws—it builds long-term credibility.</p>
@@ -352,7 +393,7 @@
         let selectedCondition = "First Hand";
 
         tags.forEach((tag) => {
-            tag.addEventListener("click", function() {
+            tag.addEventListener("click", function () {
                 tags.forEach((item) => item.classList.remove("active"));
                 this.classList.add("active");
                 selectedCategory = this.dataset.value;
@@ -360,19 +401,19 @@
         });
 
         cards.forEach((card) => {
-            card.addEventListener("click", function() {
+            card.addEventListener("click", function () {
                 cards.forEach((item) => item.classList.remove("selected"));
                 this.classList.add("selected");
                 selectedCondition = this.dataset.value;
             });
         });
 
-        priceInput.addEventListener("input", function() {
+        priceInput.addEventListener("input", function () {
             const value = this.value.trim();
             priceDisplay.textContent = value ? "Rs. " + value : "Rs. 0.00";
         });
 
-        postItemForm.addEventListener("submit", async function(e) {
+        postItemForm.addEventListener("submit", async function (e) {
             e.preventDefault();
 
             if (!userEmail) {
@@ -409,7 +450,17 @@
                 statusText.textContent = "Could not reach the server. Please try again.";
             }
         });
+
+        window.onload = function() {
+            if (userEmail) {
+                const encodedEmail = encodeURIComponent(userEmail);
+                document.querySelectorAll('.nav-links a').forEach(link => {
+                    link.href = link.href + (link.href.includes('?') ? '&' : '?') + 'email=' + encodedEmail;
+                });
+            }
+        };
     </script>
 
 </body>
+
 </html>
