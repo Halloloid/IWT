@@ -1,106 +1,424 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CampusMarket Profile</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
     <style>
-        body {
-            font-family: 'Inter', system-ui, sans-serif;
+        * {
+            box-sizing: border-box;
         }
 
-        .heading-font {
-            font-family: 'Playfair Display', sans-serif;
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f9fafb;
+            color: #1f2937;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 56px;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .user-name {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .user-subinfo {
+            font-size: 1.125rem;
+            color: #4b5563;
+            margin-top: 4px;
+            margin-bottom: 12px;
+        }
+
+        .email-badge {
+            background: #047857;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 4px 16px;
+            border-radius: 24px;
+            display: inline-block;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 32px;
+            margin-top: 40px;
+        }
+
+        .detail-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #6b7280;
+            margin-bottom: 8px;
+            margin-top: 0;
+        }
+
+        .detail-value {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #374151;
+            margin: 0;
+        }
+
+        .stats-container {
+            display: flex;
+            gap: 16px;
+            margin-top: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 24px;
+            padding: 20px 32px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-value {
+            font-size: 2.25rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+        .modes-container {
+            display: flex;
+            gap: 8px;
+            margin-top: 40px;
+        }
+
+        .listings-section {
+            margin-top: 48px;
+        }
+
+        .listings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .listings-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .new-btn {
+            background: #065f46;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .new-btn:hover {
+            background: #064e3b;
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .empty-state {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            color: #6b7280;
+            grid-column: 1 / -1;
+        }
+
+        /* Product cards for profile */
+        .product-card {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid #f3f4f6;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .product-img-wrapper {
+            position: relative;
+        }
+
+        .product-img {
+            width: 100%;
+            height: 192px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .status-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            padding: 4px 12px;
+            border-radius: 24px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-available {
+            background: #d1fae5;
+            color: #047857;
+        }
+
+        .status-sold {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+
+        .product-content {
+            padding: 24px;
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .product-title {
+            font-weight: 600;
+            font-size: 1.125rem;
+            margin: 0;
+        }
+
+        .product-price {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #047857;
+            margin: 0;
+        }
+
+        .product-meta {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-bottom: 16px;
+            margin-top: 0;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            border: 1px solid #e5e7eb;
+            background: white;
+        }
+
+        .action-btn:hover {
+            background: #f9fafb;
+        }
+
+        .delete-btn {
+            color: #dc2626;
+            border-color: #fca5a5;
+        }
+
+        .delete-btn:hover {
+            background: #fef2f2;
+        }
+
+        /* Dark navbar */
+        .site-nav {
+            background: #111827;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .site-nav .logo-text {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .site-nav .logo-text span {
+            color: #10b981;
+        }
+
+        .site-nav a.nav-item {
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 14px;
+            padding: 6px 14px;
+            border-radius: 8px;
+        }
+
+        .site-nav a.nav-item:hover,
+        .site-nav a.nav-item.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .card-hover {
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
         .card-hover:hover {
             transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Mode Buttons */
+        .mode-btn {
+            padding: 12px 32px;
+            border-radius: 30px;
+            font-weight: 500;
+            background: white;
+            color: black;
+            border: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .mode-btn.active {
+            background: black;
+            color: white;
+            border-color: black;
         }
     </style>
 </head>
-<body class="bg-[#fffaf0] text-gray-800">
 
-    <header class="bg-white border-b">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-            <div class="flex items-center gap-8">
-                <h1 class="text-2xl font-bold heading-font">CampusMarket</h1>
-                <nav class="flex gap-6 text-sm font-medium">
-                    <a href="home.html" class="hover:text-black">Home</a>
-                    <a href="post-item.html" id="sellLink" class="hover:text-black">Sell</a>
-                </nav>
-            </div>
+<body class="bg-gray-50 text-gray-800">
+
+    <header class="site-nav">
+        <div class="nav-inner">
+            <div class="logo-text">Campus<span>Market</span></div>
+            <nav class="nav-links">
+                <a href="home.html" class="nav-item">Home</a>
+                <a href="post-item.html" id="sellLink" class="nav-item">Post Item</a>
+                <a href="profile.html" id="profileLink" class="nav-item active">Profile</a>
+            </nav>
         </div>
     </header>
 
-    <div class="max-w-7xl mx-auto px-6 py-10">
-        <div class="flex flex-col md:flex-row justify-between items-start gap-6">
+    <div class="container" id="profileContainer">
+        <div class="profile-header">
             <div>
-                <h1 id="userName" class="text-5xl font-bold heading-font">Loading profile...</h1>
-                <p class="text-lg text-gray-600 mt-1">
+                <h1 id="userName" class="user-name">Loading profile...</h1>
+                <p class="user-subinfo">
                     <span id="userBranch">Please wait</span> |
                     <span id="userYear">Please wait</span>
                 </p>
-                <span class="inline-block bg-emerald-700 text-white text-xs font-medium px-4 py-1 rounded-3xl mt-3" id="userEmail">
+                <span class="email-badge" id="userEmail">
                     user@silicon.ac.in
                 </span>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
+        <div class="details-grid">
             <div>
-                <p class="text-xs uppercase tracking-widest text-gray-500 mb-2">Contact Details</p>
-                <p class="flex items-center gap-2 text-gray-700">
-                    <i class="fa-solid fa-phone"></i> 
+                <p class="detail-label">Contact Details</p>
+                <p class="detail-value">
+                    <span>📞</span>
                     <span id="userPhone">Loading...</span>
                 </p>
             </div>
             <div>
-                <p class="text-xs uppercase tracking-widest text-gray-500 mb-2">Campus Address</p>
-                <p class="flex items-center gap-2 text-gray-700">
-                    <i class="fa-solid fa-location-dot"></i> 
+                <p class="detail-label">Campus Address</p>
+                <p class="detail-value">
+                    <span>📍</span>
                     <span id="userHostel">Loading...</span>
                 </p>
             </div>
         </div>
 
-        <div class="flex gap-4 mt-10">
-            <div class="bg-white rounded-3xl px-8 py-5 shadow-sm">
-                <p id="itemCount" class="text-4xl font-semibold">0</p>
-                <p class="text-sm text-gray-500">ACTIVE LISTINGS</p>
+        <div class="stats-container">
+            <div class="stat-card">
+                <p id="itemCount" class="stat-value">0</p>
+                <p class="stat-label" id="label1">ACTIVE LISTINGS</p>
             </div>
-            <div class="bg-white rounded-3xl px-8 py-5 shadow-sm">
-                <p id="availableCount" class="text-4xl font-semibold">0</p>
-                <p class="text-sm text-gray-500">AVAILABLE ITEMS</p>
+            <div class="stat-card">
+                <p id="availableCount" class="stat-value">0</p>
+                <p class="stat-label" id="label2">SOLD ITEMS</p>
             </div>
         </div>
 
-        <div class="mt-10 flex gap-2">
-            <button onclick="toggleMode(this)" 
-                    class="seller-btn active bg-black text-white px-8 py-3 rounded-3xl font-medium">
+        <div class="modes-container">
+            <button onclick="toggleMode(this, 'seller')" class="mode-btn active">
                 Seller Mode
             </button>
-            <button onclick="toggleMode(this)" 
-                    class="buyer-btn px-8 py-3 rounded-3xl font-medium bg-white">
+            <button onclick="toggleMode(this, 'buyer')" class="mode-btn">
                 Buyer Mode
             </button>
         </div>
 
-        <div class="mt-12">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-semibold">Active Listings</h2>
-                <button id="newListingButton"
-                        class="bg-emerald-800 text-white px-6 py-3 rounded-3xl flex items-center gap-2 hover:bg-emerald-900">
-                    <i class="fa-solid fa-plus"></i>
+        <div class="listings-section">
+            <div class="listings-header">
+                <h2 class="listings-title">Active Listings</h2>
+                <button id="newListingButton" class="new-btn">
+                    <span>+</span>
                     List New Item
                 </button>
             </div>
 
-            <div id="userItems" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="bg-white rounded-2xl p-8 text-center text-gray-500">
+            <div id="userItems" class="items-grid">
+                <div class="empty-state">
                     Loading listings...
                 </div>
             </div>
@@ -113,15 +431,31 @@
         const errorEl = document.createElement('div');
         errorEl.style.cssText = 'color:#b91c1c; margin:20px; text-align:center; display:none;';
         errorEl.id = 'profileError';
-        document.querySelector('.max-w-7xl').prepend(errorEl);
+        document.getElementById('profileContainer').prepend(errorEl);
 
-        function toggleMode(btn) {
-            document.querySelectorAll('.seller-btn, .buyer-btn').forEach(b => {
-                b.classList.remove('active', 'bg-black', 'text-white');
-                b.classList.add('bg-white');
+        function toggleMode(btn, mode) {
+            document.querySelectorAll('.mode-btn').forEach(b => {
+                b.classList.remove('active');
             });
-            
-            btn.classList.add('active', 'bg-black', 'text-white');
+            btn.classList.add('active');
+
+            if (mode === 'seller') {
+                document.getElementById('label1').textContent = "ACTIVE LISTINGS";
+                document.getElementById('label2').textContent = "SOLD ITEMS";
+
+                if (document.getElementById('itemCount').dataset.activeCount) {
+                    document.getElementById('itemCount').textContent = document.getElementById('itemCount').dataset.activeCount;
+                    document.getElementById('availableCount').textContent = document.getElementById('availableCount').dataset.soldCount;
+                }
+            } else {
+                document.getElementById('label1').textContent = "ACTIVE LISTINGS";
+                document.getElementById('label2').textContent = "BOUGHT ITEMS";
+
+                if (document.getElementById('itemCount').dataset.activeCount) {
+                    document.getElementById('itemCount').textContent = document.getElementById('itemCount').dataset.activeCount;
+                }
+                document.getElementById('availableCount').textContent = "0"; // Placeholder for bought items
+            }
         }
 
         function showError(message) {
@@ -133,33 +467,48 @@
             const container = document.getElementById('userItems');
             container.innerHTML = '';
 
-            if (items.length === 0) {
-                container.innerHTML = '<p class="text-gray-500 text-center py-8">No items listed yet.</p>';
+            if (!items || items.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        You haven't listed any items yet.
+                    </div>
+                `;
                 return;
             }
 
             items.forEach(item => {
-                const itemHTML = `
-                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 card-hover">
-                        <img src="${item.imagePath || 'https://picsum.photos/400/300?random=' + item.itemId}" 
-                             alt="${item.title}" class="w-full h-48 object-cover">
-                        <div class="p-6">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="font-semibold text-lg">${item.title}</h3>
-                                <p class="text-xl font-semibold text-emerald-700">Rs. ${item.price}</p>
-                            </div>
-                            <div class="flex items-center gap-2 mb-4">
-                                <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs">${item.conditionType}</span>
-                                <span class="text-gray-500 text-xs">${item.status}</span>
-                            </div>
-                            <button onclick="viewItem(${item.itemId})" 
-                                    class="w-full bg-black text-white py-3 rounded-xl text-sm font-semibold hover:bg-gray-800 transition">
-                                View Details
+                const isAvailable = item.status === 'available';
+
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-img-wrapper">
+                        <img src="${item.imagePath || 'https://picsum.photos/id/201/600/400'}" class="product-img">
+                        <span class="status-badge ${isAvailable ? 'status-available' : 'status-sold'}">
+                            ${isAvailable ? 'Available' : 'Sold'}
+                        </span>
+                    </div>
+                    
+                    <div class="product-content">
+                        <div class="product-header">
+                            <h3 class="product-title">${item.title}</h3>
+                            <p class="product-price">Rs. ${item.price}</p>
+                        </div>
+                        
+                        <p class="product-meta">Listed on ${new Date(item.postedAt).toLocaleDateString()}</p>
+                        
+                        <div class="action-btns">
+                            <button onclick="window.location.href='item-details.html?id=${item.itemId}&email=${encodeURIComponent(email)}'" 
+                                    class="action-btn">
+                                Sold
+                            </button>
+                            <button onclick="deleteItem(${item.itemId})" class="action-btn delete-btn">
+                                Delete
                             </button>
                         </div>
                     </div>
                 `;
-                container.innerHTML += itemHTML;
+                container.appendChild(card);
             });
         }
 
@@ -173,11 +522,15 @@
         if (!email) {
             showError('Email parameter missing. Please log in first.');
         } else {
-            document.getElementById('sellLink').href = `post-item.html?email=${encodeURIComponent(email)}`;
-            document.getElementById('profileLink').href = `profile.html?email=${encodeURIComponent(email)}`;
-            document.getElementById('newListingButton').onclick = function() {
-                window.location.href = `post-item.html?email=${encodeURIComponent(email)}`;
-            };
+            const encodedEmail = encodeURIComponent(email);
+            document.querySelectorAll('a[href="home.html"], a[href="post-item.html"], a[href="profile.html"]').forEach(link => {
+                link.href = link.href + (link.href.includes('?') ? '&' : '?') + 'email=' + encodedEmail;
+            });
+            if (document.getElementById('newListingButton')) {
+                document.getElementById('newListingButton').onclick = function () {
+                    window.location.href = `post-item.html?email=${encodedEmail}`;
+                };
+            }
 
             fetch(`ProfileServlet?email=${encodeURIComponent(email)}`)
                 .then(response => response.json())
@@ -193,10 +546,16 @@
                     document.getElementById('userYear').textContent = data.yearOfStudy ? `Year ${data.yearOfStudy}` : 'Not specified';
                     document.getElementById('userHostel').textContent = data.hostelBlock || 'Not specified';
                     document.getElementById('userPhone').textContent = data.phone || 'Not specified';
-                    document.getElementById('itemCount').textContent = data.itemCount || 0;
+                    const activeItems = (data.items || []).filter(item => item.status === 'available').length;
+                    const soldItems = (data.items || []).filter(item => item.status !== 'available').length;
 
-                    const availableItems = (data.items || []).filter(item => item.status === 'available').length;
-                    document.getElementById('availableCount').textContent = availableItems;
+                    document.getElementById('itemCount').textContent = activeItems;
+                    document.getElementById('availableCount').textContent = soldItems;
+
+                    // Save to dataset for toggling
+                    document.getElementById('itemCount').dataset.activeCount = activeItems;
+                    document.getElementById('availableCount').dataset.soldCount = soldItems;
+
                     document.title = `${data.fullName || 'User'} - CampusMarket`;
 
                     renderUserItems(data.items || []);
@@ -207,4 +566,5 @@
         }
     </script>
 </body>
+
 </html>
