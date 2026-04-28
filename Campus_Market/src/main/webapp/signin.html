@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="UTF-8"/>
+    <meta charset="UTF-8" />
     <title>CampusMarket - Sign In</title>
 
     <style>
@@ -152,7 +153,6 @@
             font-size: 13px;
             color: #777777;
         }
-
     </style>
 </head>
 
@@ -172,10 +172,8 @@
             <!-- Login Form -->
             <form class="form active" id="signinForm">
                 <label>Email</label>
-                <input type="email" name="email" placeholder="user@silicon.ac.in" 
-                       pattern=".+@silicon\.ac\.in" 
-                       title="Please use your institutional email ending in @silicon.ac.in" 
-                       required>
+                <input type="email" name="email" placeholder="user@silicon.ac.in" pattern=".+@silicon\.ac\.in"
+                    title="Please use your institutional email ending in @silicon.ac.in" required>
 
                 <label>Password</label>
                 <input type="password" name="password" placeholder="Enter your password" required>
@@ -192,10 +190,8 @@
                 <input type="text" name="full_name" placeholder="Enter your full name" required>
 
                 <label>Email</label>
-                <input type="email" name="email" placeholder="user@silicon.ac.in" 
-                       pattern=".+@silicon\.ac\.in" 
-                       title="Please use your institutional email ending in @silicon.ac.in" 
-                       required>
+                <input type="email" name="email" placeholder="user@silicon.ac.in" pattern=".+@silicon\.ac\.in"
+                    title="Please use your institutional email ending in @silicon.ac.in" required>
 
                 <label>Phone</label>
                 <input type="text" name="phone" placeholder="Enter your phone number" required>
@@ -264,7 +260,7 @@
             }
         }
 
-        signInForm.addEventListener("submit", async function(e) {
+        signInForm.addEventListener("submit", async function (e) {
             e.preventDefault();
 
             const email = this.querySelector('input[name="email"]').value.trim();
@@ -295,7 +291,7 @@
             }
         });
 
-        signUpForm.addEventListener("submit", async function(e) {
+        signUpForm.addEventListener("submit", async function (e) {
             e.preventDefault();
 
             const sic = this.querySelector('input[name="sic"]').value.trim();
@@ -344,4 +340,5 @@
         });
     </script>
 </body>
+
 </html>
