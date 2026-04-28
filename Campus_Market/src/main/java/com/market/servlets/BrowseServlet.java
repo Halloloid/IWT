@@ -33,7 +33,7 @@ public class BrowseServlet extends HttpServlet {
                 "WHERE i.status = 'available' ");
 
             if (category != null && !category.trim().isEmpty())
-                sql.append("AND i.category = ? ");
+                sql.append("AND LOWER(i.category) = LOWER(?) ");
             if (search != null && !search.trim().isEmpty())
                 sql.append("AND (i.title ILIKE ? OR i.description ILIKE ?) ");
             sql.append("ORDER BY i.posted_at DESC");

@@ -81,16 +81,56 @@ public class LoginServlet extends HttpServlet {
         Map<String, String> values = new HashMap<>();
         String json = body.toString().trim();
         if (json.startsWith("{") && json.endsWith("}")) {
-            json = json.substring(1, json.length() - 1);
-            if (!json.trim().isEmpty()) {
-                String[] pairs = json.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
-                for (String pair : pairs) {
-                    String[] keyValue = pair.split(":(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", 2);
-                    if (keyValue.length == 2) {
-                        String key = cleanJsonValue(keyValue[0]);
-                        String value = cleanJsonValue(keyValue[1]);
-                        values.put(key, value);
+            json = json.substring(1, json.length() - 1).trim();
+            boolean inQuotes = false;
+            boolean isEscaped = false;
+            StringBuilder current = new StringBuilder();
+            java.util.List<String> tokens = new java.util.ArrayList<>();
+
+            for (int i = 0; i < json.length(); i++) {
+                char c = json.charAt(i);
+                if (isEscaped) {
+                    current.append(c);
+                    isEscaped = false;
+                } else if (c == '\\') {
+                    current.append(c);
+                    isEscaped = true;
+                } else if (c == '"') {
+                    inQuotes = !inQuotes;
+                    current.append(c);
+                } else if (c == ',' && !inQuotes) {
+                    tokens.add(current.toString());
+                    current.setLength(0);
+                } else {
+                    current.append(c);
+                }
+            }
+            if (current.length() > 0) {
+                tokens.add(current.toString());
+            }
+
+            for (String token : tokens) {
+                int colonIndex = -1;
+                inQuotes = false;
+                isEscaped = false;
+                for (int i = 0; i < token.length(); i++) {
+                    char c = token.charAt(i);
+                    if (isEscaped) {
+                        isEscaped = false;
+                    } else if (c == '\\') {
+                        isEscaped = true;
+                    } else if (c == '"') {
+                        inQuotes = !inQuotes;
+                    } else if (c == ':' && !inQuotes) {
+                        colonIndex = i;
+                        break;
                     }
+                }
+
+                if (colonIndex != -1) {
+                    String key = cleanJsonValue(token.substring(0, colonIndex));
+                    String value = cleanJsonValue(token.substring(colonIndex + 1));
+                    values.put(key, value);
                 }
             }
         }
@@ -102,6 +142,6 @@ public class LoginServlet extends HttpServlet {
         if (cleaned.startsWith("\"") && cleaned.endsWith("\"") && cleaned.length() >= 2) {
             cleaned = cleaned.substring(1, cleaned.length() - 1);
         }
-        return cleaned.replace("\\\"", "\"").replace("\\\\", "\\");
+        return cleaned.replace("\\\"", "\"").replace("\\\\", "\\").replace("\\n", "\n").replace("\\r", "\r");
     }
 }

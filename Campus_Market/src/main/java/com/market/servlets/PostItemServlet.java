@@ -33,7 +33,12 @@ public class PostItemServlet extends HttpServlet {
             description == null || description.trim().isEmpty() ||
             priceStr == null || priceStr.trim().isEmpty() ||
             imagePath == null || imagePath.trim().isEmpty()) {
-            res.sendRedirect("post-item.html?error=missing_fields");
+            
+            String redirectUrl = "post-item.html?error=missing_fields";
+            if (sellerEmail != null && !sellerEmail.trim().isEmpty()) {
+                redirectUrl += "&email=" + java.net.URLEncoder.encode(sellerEmail, "UTF-8");
+            }
+            res.sendRedirect(redirectUrl);
             return;
         }
 
@@ -56,7 +61,7 @@ public class PostItemServlet extends HttpServlet {
             try {
                 ps.setDouble(6, Double.parseDouble(priceStr));
             } catch (NumberFormatException e) {
-                res.sendRedirect("post-item.html?error=invalid_price");
+                res.sendRedirect("post-item.html?error=invalid_price&email=" + java.net.URLEncoder.encode(sellerEmail, "UTF-8"));
                 return;
             }
             ps.setString(7, imagePath.trim());
@@ -64,14 +69,14 @@ public class PostItemServlet extends HttpServlet {
             int rows = ps.executeUpdate();
 
             if (rows > 0) {
-                res.sendRedirect("home.html?success=posted");
+                res.sendRedirect("home.html?success=posted&email=" + java.net.URLEncoder.encode(sellerEmail, "UTF-8"));
             } else {
-                res.sendRedirect("post-item.html?error=failed");
+                res.sendRedirect("post-item.html?error=failed&email=" + java.net.URLEncoder.encode(sellerEmail, "UTF-8"));
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
-            res.sendRedirect("post-item.html?error=database");
+            res.sendRedirect("post-item.html?error=database&email=" + java.net.URLEncoder.encode(sellerEmail != null ? sellerEmail : "", "UTF-8"));
         } finally {
             DBConnection.closeStatement(ps);
             DBConnection.closeConnection(conn);
@@ -105,16 +110,56 @@ public class PostItemServlet extends HttpServlet {
         Map<String, String> values = new HashMap<>();
         String json = body.toString().trim();
         if (json.startsWith("{") && json.endsWith("}")) {
-            json = json.substring(1, json.length() - 1);
-            if (!json.trim().isEmpty()) {
-                String[] pairs = json.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
-                for (String pair : pairs) {
-                    String[] keyValue = pair.split(":(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", 2);
-                    if (keyValue.length == 2) {
-                        String key = cleanJsonValue(keyValue[0]);
-                        String value = cleanJsonValue(keyValue[1]);
-                        values.put(key, value);
+            json = json.substring(1, json.length() - 1).trim();
+            boolean inQuotes = false;
+            boolean isEscaped = false;
+            StringBuilder current = new StringBuilder();
+            java.util.List<String> tokens = new java.util.ArrayList<>();
+
+            for (int i = 0; i < json.length(); i++) {
+                char c = json.charAt(i);
+                if (isEscaped) {
+                    current.append(c);
+                    isEscaped = false;
+                } else if (c == '\\') {
+                    current.append(c);
+                    isEscaped = true;
+                } else if (c == '"') {
+                    inQuotes = !inQuotes;
+                    current.append(c);
+                } else if (c == ',' && !inQuotes) {
+                    tokens.add(current.toString());
+                    current.setLength(0);
+                } else {
+                    current.append(c);
+                }
+            }
+            if (current.length() > 0) {
+                tokens.add(current.toString());
+            }
+
+            for (String token : tokens) {
+                int colonIndex = -1;
+                inQuotes = false;
+                isEscaped = false;
+                for (int i = 0; i < token.length(); i++) {
+                    char c = token.charAt(i);
+                    if (isEscaped) {
+                        isEscaped = false;
+                    } else if (c == '\\') {
+                        isEscaped = true;
+                    } else if (c == '"') {
+                        inQuotes = !inQuotes;
+                    } else if (c == ':' && !inQuotes) {
+                        colonIndex = i;
+                        break;
                     }
+                }
+
+                if (colonIndex != -1) {
+                    String key = cleanJsonValue(token.substring(0, colonIndex));
+                    String value = cleanJsonValue(token.substring(colonIndex + 1));
+                    values.put(key, value);
                 }
             }
         }
@@ -126,6 +171,6 @@ public class PostItemServlet extends HttpServlet {
         if (cleaned.startsWith("\"") && cleaned.endsWith("\"") && cleaned.length() >= 2) {
             cleaned = cleaned.substring(1, cleaned.length() - 1);
         }
-        return cleaned.replace("\\\"", "\"").replace("\\\\", "\\");
+        return cleaned.replace("\\\"", "\"").replace("\\\\", "\\").replace("\\n", "\n").replace("\\r", "\r");
     }
 }
